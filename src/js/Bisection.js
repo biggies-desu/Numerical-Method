@@ -3,8 +3,21 @@ import React from 'react';
 const Parser = require('expr-eval').Parser;
 
 
-function bisectioncalc(XL,XR,func,errorapox)
-{
+
+
+
+
+class Bisect extends React.Component {
+    handleSubmit = (event) => {
+      event.preventDefault()
+      const XL = (event.target.xl.value)
+      const XR = (event.target.xr.value)
+      const func = (event.target.function.value)
+      const errorapox = (event.target.err.value)
+
+
+    function bisectioncalc(XL,XR,func,errorapox)
+    {
     const parser = new Parser();
     function fx(x)
     {
@@ -34,22 +47,13 @@ function bisectioncalc(XL,XR,func,errorapox)
         }
         ErrorApox = Math.abs((xm-xold)/xm)*100
         i++
-        render(("Iteration #"+i+" || XL = "+xl+" XM = "+xm+" XR = "+xr))
-        render(("ErrorApox = "+ErrorApox))
+        render(("----> Iteration #"+i+" || XL = "+xl.toFixed(6)+" XM = "+xm.toFixed(6)+" XR = "+xr.toFixed(6)))
+        render(("----> ErrorApox = "+ErrorApox.toFixed(6)))
     
-    }   
+        }   
     
-}
-
-
-class Bisect extends React.Component {
-    handleSubmit = (event) => {
-      event.preventDefault()
-      const XL = (event.target.xl.value)
-      const XR = (event.target.xr.value)
-      const func = (event.target.function.value)
-      const errorapox = (event.target.err.value)
-      console.log("XL = "+XL)
+      }
+      console.log("XL = "+XL)   //console log for debugging
       console.log("XR = "+XR)
       console.log("Function = "+func)
       console.log("Errorapox = "+errorapox)
@@ -59,9 +63,12 @@ class Bisect extends React.Component {
     render() {
       return (
         <form onSubmit={this.handleSubmit}>
+            <p></p><p>
+            &emsp;&emsp;&emsp;&emsp;Bisection Method    
+            </p>
             <p>
           <label>
-             XL :
+          &emsp;XL :&emsp;
             <input
               type="text"
               name="xl"
@@ -70,7 +77,7 @@ class Bisect extends React.Component {
             />
           </label>
           <label>
-             XR :
+          &emsp;XR :&emsp;
             <input
               type="text"
               name="xr"
@@ -79,7 +86,7 @@ class Bisect extends React.Component {
             />
           </label>
           <label>
-             ErrorApox :
+          &emsp;ErrorApox :&emsp;
             <input
               type="text"
               name="err"
@@ -90,7 +97,7 @@ class Bisect extends React.Component {
           </p>
           <p>
           <label>
-             function :
+          &emsp;function :&emsp;
             <input
               type="text"
               name="function"
@@ -99,7 +106,9 @@ class Bisect extends React.Component {
             />
           </label>
           </p>
-          <button type="submit">Submit</button>
+          <p>   
+          &emsp;<button type="submit">Submit</button>
+          </p>
         </form>
       )
     }
