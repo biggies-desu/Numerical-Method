@@ -29,6 +29,7 @@ class Falseposition extends React.Component
         var xm,xold;
         var ErrorApox_Answer=10000000; //set as default
         var inputerrorapox = parseFloat(ErrorApox)
+        if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null){
         while(ErrorApox_Answer>inputerrorapox)
             {
                 xm=((xl*fx(xr))-(xr*fx(xl)))/(fx(xr)-fx(xl));
@@ -51,6 +52,8 @@ class Falseposition extends React.Component
             render("XM = "+xm.toFixed(6)+" Errorapox = "+ErrorApox_Answer.toFixed(6)+" at iteration #"+i)//calc wont re-render so i stuck at this
         }
         return "XM="+xm+" at Iteration = "+i; //calc wont re-render so i stuck at this
+      }
+      return "Input XL,XR,ErrorApox and Function first!!"
     }
 
 
