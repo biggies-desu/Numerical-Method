@@ -13,13 +13,13 @@ class Newton extends React.Component
         this.handleSubmit = this.handleSubmit.bind(this)    
     }
 
-    OnepointCalcFunction(X0,ErrorApox,Funct)
+    NewtonCalcFunction(X0,ErrorApox,Funct)
     {
-        function fx(x)
+        function fx(x) //if this x = 3
         {
-            const exprfx = math.parse(Funct)
-            console.log("test = "+exprfx.evaluate({x: x}));
-            return exprfx.evaluate({x: x});
+            const exprfx = math.parse(Funct) //turning this from string into math expression
+            console.log("test = "+exprfx.evaluate({x: x})); 
+            return exprfx.evaluate({x: x}); //replace any x in math expression with input(x)
         }
         function fxprime(x)
         {
@@ -35,32 +35,31 @@ class Newton extends React.Component
         var ErrorApox_Answer=10000000; //set as default
         var inputerrorapox = parseFloat(ErrorApox)
 
-        render("fx = "+math.parse(Funct))
-        render("gx = "+math.derivative(math.parse(Funct),'x'))
+        
         
         if(x0!=null && Funct!=null && inputerrorapox!=null)
         {
-        while(ErrorApox_Answer>inputerrorapox)
-        {
+          render("fx = "+math.parse(Funct))
+          render("gx = "+math.derivative(math.parse(Funct),'x'))
+          while(ErrorApox_Answer>inputerrorapox)
+          {
             
             deltaX = ((-fx(x0))/(fxprime(x0)));
             x0 = x0+deltaX;
             ErrorApox_Answer = Math.abs((deltaX)/x0)*100;
             i++;
-
             render("X = "+x0.toFixed(6)+" Errorapox = "+ErrorApox_Answer.toFixed(6)+" at iteration #"+i)
-
-        }
-        return "X="+x0+" at Iteration = "+i;
+          }
+          return "X="+x0+" at Iteration = "+i;
         }
         return "Input X,ErrorApox and Function first!!"
-    }
+    }   
 
 
     handleSubmit(event){
         const {X0,ErrorApox,Funct} = this.state
         
-        const xm = this.OnepointCalcFunction(X0,ErrorApox,Funct)
+        const xm = this.NewtonCalcFunction(X0,ErrorApox,Funct)
         event.preventDefault()
         console.log("X = "+X0)   //console log for debugging
         console.log("Function = "+Funct)
