@@ -1,3 +1,8 @@
 This is my project doing react application with numerical method relate.
 
 I would trying my best to do this.
+
+(reactjs pain awa)
+
+
+Made by : Decha Boonmapasap 6404062630350 CS KMUTNB
