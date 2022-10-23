@@ -49,7 +49,6 @@ class Secent extends React.Component
         return "Input X,ErrorApox and Function first!!"
     }   
 
-
     handleSubmit(event){
         const {X0,X1,ErrorApox,Funct} = this.state
         
