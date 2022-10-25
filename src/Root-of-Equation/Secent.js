@@ -45,7 +45,6 @@ class Secent extends React.Component
         var deltaX;
         var ErrorApox_Answer=10000000; //set as default
         var inputerrorapox = parseFloat(ErrorApox)
-
         
         
         if(x0!=null && x1!=null && Funct!=null && inputerrorapox!=null)
@@ -65,8 +64,9 @@ class Secent extends React.Component
           }
           return "X="+x0+" at Iteration = "+i;
         }
-        return "Input X,ErrorApox and Function first!!"
+        return "Input X0,X1,ErrorApox and Function first!!"
     }
+
     graph()
     {
       console.log("igraph  =  " +igraph)
@@ -97,7 +97,10 @@ class Secent extends React.Component
         console.log("Function = "+Funct)
         console.log("Errorapox = "+ErrorApox)
         render(xm)
-        render(showgraph)
+        if(X0!=null&&X1!=null&&ErrorApox!=null&&Funct!=null)
+        {
+          render(showgraph);
+        }
         
 
     }

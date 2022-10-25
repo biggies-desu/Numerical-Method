@@ -110,7 +110,10 @@ class Falseposition extends React.Component
         console.log("Function = "+Funct)
         console.log("Errorapox = "+ErrorApox)
         render(xm) //same here at line 53 i literally stuck at re-rendering 
-        render(showgraph)
+        if(XL!=null&&XR!=null&&ErrorApox!=null&&Funct!=null)
+        {
+          render(showgraph);
+        }
         
 
     }

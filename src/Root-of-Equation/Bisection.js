@@ -50,6 +50,7 @@ class Bisection extends React.Component
         var ErrorApox_Answer=10000000; //set as default
         var inputerrorapox = parseFloat(ErrorApox)
         
+        
 
         if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null){
         while(ErrorApox_Answer>inputerrorapox)
@@ -116,10 +117,10 @@ class Bisection extends React.Component
         console.log("Function = "+Funct)
         console.log("Errorapox = "+ErrorApox)
         render(xm) //same here at line 53 i literally stuck at re-rendering 
-        render(showgraph);
-        
-        
-
+        if(XL!=null&&XR!=null&&ErrorApox!=null&&Funct!=null)
+        {
+          render(showgraph);
+        }
     }
 
     handleChange(event)
