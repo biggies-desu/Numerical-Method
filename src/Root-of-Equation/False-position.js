@@ -1,17 +1,38 @@
 import { render } from "@testing-library/react";
 import React,{ Component } from 'react'
 import { useState } from 'react'
+import Chart from 'react-apexcharts'
+
 const Parser = require('expr-eval').Parser;
+var xmgraph = []
+var igraph = []
 
 class Falseposition extends React.Component
 {
-    constructor(props)
-    {
-        super(props)
-        this.state = {XL:'',XR:'',ErrorApox:'',func:''}
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)    
-    }
+  constructor(props)
+  {
+      super(props)
+      this.state = {XL:'',XR:'',ErrorApox:'',func:'',
+      options: {
+        chart: {
+          id: "bar"
+        },
+        xaxis: {
+          categories: igraph //iteration
+        }
+      },
+      series: [
+        {
+          name: "XM value", //xm of iteration 'n'
+          data: xmgraph
+        }
+      ]
+    };
+      this.handleChange = this.handleChange.bind(this)
+      this.handleSubmit = this.handleSubmit.bind(this)    
+  }
+          
+
 
     FalsePositionCalcFunction(XL,XR,ErrorApox,Funct)
     {
@@ -45,6 +66,9 @@ class Falseposition extends React.Component
                 }
                 ErrorApox_Answer = Math.abs((xm-xold)/xm)*100
             i++
+            xmgraph.push(xm.toFixed(6));
+            
+            igraph.push(i)
             console.log("XL = "+xl)   //console log for debugging
             console.log("XM = "+xm)
             console.log("XR = "+xr)
@@ -55,18 +79,38 @@ class Falseposition extends React.Component
       }
       return "Input XL,XR,ErrorApox and Function first!!"
     }
+    graph()
+    {
+      console.log("igraph  =  " +igraph)
+      return (
+        <div className="app">
+          <h1>&emsp;Graph</h1>
+          <div className="row">
+            <div className="mixed-chart">
+              <Chart
+                options={this.state.options}
+                series={this.state.series}
+                type="line"
+                width="750"
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
 
 
     handleSubmit(event){
         const {XL,XR,ErrorApox,Funct} = this.state
-        
         const xm = this.FalsePositionCalcFunction(XL,XR,ErrorApox,Funct)
+        const showgraph = this.graph()
         event.preventDefault()
         console.log("XL = "+XL)   //console log for debugging
         console.log("XR = "+XR)
         console.log("Function = "+Funct)
         console.log("Errorapox = "+ErrorApox)
         render(xm) //same here at line 53 i literally stuck at re-rendering 
+        render(showgraph)
         
 
     }

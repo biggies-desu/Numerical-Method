@@ -1,14 +1,34 @@
 import { render } from "@testing-library/react";
 import React,{ Component } from 'react'
 import { useState } from 'react'
+import Chart from 'react-apexcharts'
 const Parser = require('expr-eval').Parser;
+
+var xmgraph = [];
+var igraph = [];
 
 class Bisection extends React.Component
 {
+  
     constructor(props)
     {
         super(props)
-        this.state = {XL:'',XR:'',ErrorApox:'',func:''}
+        this.state = {XL:'',XR:'',ErrorApox:'',func:'',
+        options: {
+          chart: {
+            id: "bar"
+          },
+          xaxis: {
+            categories: igraph //iteration
+          }
+        },
+        series: [
+          {
+            name: "XM value", //xm of iteration 'n'
+            data: xmgraph
+          }
+        ]
+      };
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)    
     }
@@ -29,6 +49,8 @@ class Bisection extends React.Component
         var xm,xold;
         var ErrorApox_Answer=10000000; //set as default
         var inputerrorapox = parseFloat(ErrorApox)
+        
+
         if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null){
         while(ErrorApox_Answer>inputerrorapox)
             {
@@ -45,28 +67,57 @@ class Bisection extends React.Component
                 }
                 ErrorApox_Answer = Math.abs((xm-xold)/xm)*100
             i++
+            xmgraph.push(xm.toFixed(6));
+            
+            igraph.push(i)
             console.log("XL = "+xl)   //console log for debugging
             console.log("XM = "+xm)
             console.log("XR = "+xr)
             console.log("Errorapox = "+ErrorApox_Answer)
             render("XM = "+xm.toFixed(6)+" Errorapox = "+ErrorApox_Answer.toFixed(6)+" at iteration #"+i)//calc wont re-render so i stuck at this
         }
+        console.log(xmgraph);
+        console.log(igraph);
         return "XM="+xm+" at Iteration = "+i; //calc wont re-render so i stuck at this
       }
       return "Input XL,XR,ErrorApox and Function first!!"
+    }
+
+    graph()
+    {
+      console.log("igraph  =  " +igraph)
+      return (
+        <div className="app">
+          <h1>&emsp;Graph</h1>
+          <div className="row">
+            <div className="mixed-chart">
+              <Chart
+                options={this.state.options}
+                series={this.state.series}
+                type="line"
+                width="750"
+              />
+            </div>
+          </div>
+        </div>
+      );
     }
 
 
     handleSubmit(event){
         const {XL,XR,ErrorApox,Funct} = this.state
         
+        
         const xm = this.BisectionCalcFunction(XL,XR,ErrorApox,Funct)
+        const showgraph = this.graph();
         event.preventDefault()
         console.log("XL = "+XL)   //console log for debugging
         console.log("XR = "+XR)
         console.log("Function = "+Funct)
         console.log("Errorapox = "+ErrorApox)
         render(xm) //same here at line 53 i literally stuck at re-rendering 
+        render(showgraph);
+        
         
 
     }
@@ -122,6 +173,7 @@ class Bisection extends React.Component
             <div>
             &emsp;<button>Calculate</button>
             </div>
+            
           </form>
         )
       }

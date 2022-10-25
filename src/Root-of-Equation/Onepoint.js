@@ -1,14 +1,32 @@
 import { render } from "@testing-library/react";
 import React,{ Component } from 'react'
 import { useState } from 'react'
+import Chart from 'react-apexcharts'
 const Parser = require('expr-eval').Parser;
+var igraph = []
+var xgraph = []
 
 class Onepoint extends React.Component
 {
     constructor(props)
     {
         super(props)
-        this.state = {X:'',ErrorApox:'',func:''}
+        this.state = {X:'',ErrorApox:'',func:'',
+        options: {
+          chart: {
+            id: "bar"
+          },
+          xaxis: {
+            categories: igraph //iteration
+          }
+        },
+        series: [
+          {
+            name: "X value", //xm of iteration 'n'
+            data: xgraph
+          }      
+        ]
+      };
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)    
     }
@@ -35,6 +53,8 @@ class Onepoint extends React.Component
             y=fx(x);
             ErrorApox_Answer = Math.abs((y-x)/y)*100;
             i++
+            igraph.push(i);
+            xgraph.push(x)
             console.log("XL = "+x)   //console log for debugging
             console.log("Errorapox = "+ErrorApox_Answer)
             render("X = "+x.toFixed(6)+" Errorapox = "+ErrorApox_Answer.toFixed(6)+" at iteration #"+i)//calc wont re-render so i stuck at this
@@ -44,19 +64,37 @@ class Onepoint extends React.Component
         }
         return "Input X,ErrorApox and Function first!!"
     }
+    graph()
+    {
+      console.log("igraph  =  " +igraph)
+      return (
+        <div className="app">
+          <h1>&emsp;Graph</h1>
+          <div className="row">
+            <div className="mixed-chart">
+              <Chart
+                options={this.state.options}
+                series={this.state.series}
+                type="line"
+                width="750"
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
 
 
     handleSubmit(event){
         const {X,ErrorApox,Funct} = this.state
-        
         const xm = this.OnepointCalcFunction(X,ErrorApox,Funct)
+        const showgraph = this.graph();
         event.preventDefault()
         console.log("X = "+X)   //console log for debugging
         console.log("Function = "+Funct)
         console.log("Errorapox = "+ErrorApox)
         render(xm)
-        
-
+        render(showgraph)
     }
 
     handleChange(event)
