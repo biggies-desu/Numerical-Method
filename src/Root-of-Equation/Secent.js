@@ -82,6 +82,7 @@ class Secent extends React.Component
                 width="750"
               />
             </div>
+            <h3>&emsp; Value of XM is = {xgraph[xgraph.length-1]} </h3>
           </div>
         </div>
       );
@@ -100,6 +101,8 @@ class Secent extends React.Component
         if(X0!=null&&X1!=null&&ErrorApox!=null&&Funct!=null)
         {
           render(showgraph);
+          igraph.splice(0,igraph.length)
+          xgraph.splice(0,xgraph.length)
         }
         
 

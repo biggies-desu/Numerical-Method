@@ -44,6 +44,7 @@ class Cramer extends Component {
     {
         event.preventDefault()
         console.log("CAL!!!!!")
+        render("NICE DICK")
     }
 
     handleChange(event)

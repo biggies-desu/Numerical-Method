@@ -87,6 +87,7 @@ class Bisection extends React.Component
     graph()
     {
       console.log("igraph  =  " +igraph)
+      console.log("xmgraph ="+xmgraph )
       return (
         <div className="app">
           <h1>&emsp;Graph</h1>
@@ -99,6 +100,7 @@ class Bisection extends React.Component
                 width="750"
               />
             </div>
+            <h3>&emsp; Value of XM is = {xmgraph[xmgraph.length-1]} </h3>
           </div>
         </div>
       );
@@ -120,6 +122,8 @@ class Bisection extends React.Component
         if(XL!=null&&XR!=null&&ErrorApox!=null&&Funct!=null)
         {
           render(showgraph);
+          igraph.splice(0,igraph.length)
+          xmgraph.splice(0,xmgraph.length)
         }
     }
 
@@ -171,10 +175,11 @@ class Bisection extends React.Component
               />
             </div>
             <p></p>
+            <p>
             <div>
             &emsp;<button>Calculate</button>
             </div>
-            
+            </p>
           </form>
         )
       }

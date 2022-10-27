@@ -89,6 +89,7 @@ class Newton extends React.Component
                 width="750"
               />
             </div>
+            <h3>&emsp; Value of XM is = {xmgraph[xmgraph.length-1]} </h3>
           </div>
         </div>
       );
@@ -108,6 +109,8 @@ class Newton extends React.Component
         if(X0!=null&&ErrorApox!=null&&Funct!=null)
         {
           render(showgraph);
+          igraph.splice(0,igraph.length)
+          xmgraph.splice(0,xmgraph.length)
         }
         
 

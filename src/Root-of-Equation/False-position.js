@@ -94,6 +94,7 @@ class Falseposition extends React.Component
                 width="750"
               />
             </div>
+            <h3>&emsp; Value of XM is = {xmgraph[xmgraph.length-1]} </h3>
           </div>
         </div>
       );
@@ -113,6 +114,8 @@ class Falseposition extends React.Component
         if(XL!=null&&XR!=null&&ErrorApox!=null&&Funct!=null)
         {
           render(showgraph);
+          igraph.splice(0,igraph.length)
+          xmgraph.splice(0,xmgraph.length)
         }
         
 
@@ -166,9 +169,11 @@ class Falseposition extends React.Component
               />
             </div>
             <p></p>
+            <p>
             <div>
             &emsp;<button>Calculate</button>
             </div>
+            </p>
           </form>
         )
       }
