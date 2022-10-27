@@ -33,7 +33,7 @@ import Lagrange from './Interpolation-and-Extrapolation/Lagrange';
 import Sprine from './Interpolation-and-Extrapolation/Sprine';
 
 function App() {
-  const handleSelect = (eventKey) => alert(`${eventKey}`);
+  const handleSelect = (eventKey) => alert(`${eventKey}`);//ตั้งไปงั้น
   return (
     <BrowserRouter>
       <Routes>
@@ -61,7 +61,5 @@ function App() {
       
   );
 }
-
-
 
 export default App;
