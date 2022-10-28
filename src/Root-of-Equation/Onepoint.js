@@ -1,156 +1,162 @@
-import { render } from "@testing-library/react";
 import React,{ Component } from 'react'
 import { useState } from 'react'
-import Chart from 'react-apexcharts'
-const Parser = require('expr-eval').Parser;
-var igraph = []
-var xgraph = []
+import ApexCharts from 'apexcharts'
+const math = require('mathjs');
+var xarray = [];
+var iarray = [];
+//refactor code from class component to functional component
 
-class Onepoint extends React.Component
-{
-    constructor(props)
-    {
-        super(props)
-        this.state = {X:'',ErrorApox:'',func:'',
-        options: {
-          chart: {
-            id: "bar"
-          },
-          xaxis: {
-            categories: igraph //iteration
-          }
+const Onepoint = () => {
+    var Funct,ErrorApox,X;
+
+    const [getFunct, setFunct] = useState('')
+    const [getErrorApox, setErrorApox] = useState('')
+    const [getX, setX] = useState('')
+    var xgraph = xarray;
+    var igraph = iarray;
+
+    var options = { //graph related
+        chart: {
+          type: 'line',
+          width: '750'
         },
-        series: [
-          {
-            name: "X value", //xm of iteration 'n'
-            data: xgraph
-          }      
-        ]
-      };
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)    
+        series: [{
+          name: "X value",
+          data: xgraph
+        }],
+        xaxis: {
+          categories: igraph
+        },
+        grid: {
+            row: {
+                colors: ['#e5e5e5', 'transparent'],
+                opacity: 0.5
+            }, 
+            column: {
+                colors: ['#f8f8f8', 'transparent'],
+            }, 
+            xaxis: {
+              lines: {
+                show: true
+              }
+            }
+          },
+          title: {
+            text: 'One-point Iteration Graph',
+            align: 'cebter',
+            margin: 10,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false
+        }
+      }
+      
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render(); //render chart (every time that state change)
+
+
+    var getValue = e => {//hale input event and pass value to function
+        e.preventDefault();
+        Funct = getFunct
+        ErrorApox = getErrorApox;
+        X = getX;
+        
+        console.log(X);
+        console.log(ErrorApox);
+        console.log(Funct);
+        iarray.splice(0,iarray.length) //clear array everytime user click calculate
+        xarray.splice(0,xarray.length)
+        
+        NewtonCalcFunction(X,ErrorApox,Funct)
     }
 
-    OnepointCalcFunction(X,ErrorApox,Funct)
+    function NewtonCalcFunction(X,ErrorApox,Funct)
     {
-        const parser = new Parser();
-        function fx(x)
-        {
-            let expr = parser.parse(Funct)
-            console.log("fx = "+expr.evaluate({ x: (x) }))
-            return expr.evaluate({ x: (x) })
-        }
-
         var i = 0;
-        var x = parseFloat(X);
+        var x = parseFloat(X);;
         var y;
         var ErrorApox_Answer=10000000; //set as default
         var inputerrorapox = parseFloat(ErrorApox)
-        if(x!=null && Funct!=null && inputerrorapox!=null)
+        let text = "";
+        let finalanswer = "===>";
+
+        function fx(input) //if this x = 3
         {
-        while(ErrorApox_Answer>inputerrorapox && i!==100)//exit when more than iteration #100 prevent to cause inf loop
-        {
-            y=fx(x);
-            ErrorApox_Answer = Math.abs((y-x)/y)*100;
-            i++
-            igraph.push(i);
-            xgraph.push(x)
-            console.log("XL = "+x)   //console log for debugging
-            console.log("Errorapox = "+ErrorApox_Answer)
-            render("X = "+x.toFixed(6)+" Errorapox = "+ErrorApox_Answer.toFixed(6)+" at iteration #"+i)//calc wont re-render so i stuck at this
-            x = y;
+            const exprfx = math.parse(Funct) //turning this from string into math expression
+            return exprfx.evaluate({x: input}); //replace any x in math expression with input(x)
         }
-        return "X="+x+" at Iteration = "+i;
+
+        if(x!=null && Funct!=null && inputerrorapox!=null && i!==100){//bisection function
+            while(ErrorApox_Answer>inputerrorapox)
+            {
+                y=fx(x)
+                ErrorApox_Answer = Math.abs((y-x)/x)*100;
+                i++
+                xarray.push(x.toFixed(6));
+                iarray.push(i) //push to store in array (use for render graph)
+                console.log("X = "+x)
+                console.log("Errorapox = "+ErrorApox_Answer)
+                text = text+"At Iteration #"+i+" XM = "+x.toFixed(6)+" with Errorapox of "+ErrorApox_Answer.toFixed(6)+"<br>"    //for show every iteration with xm value and errorapox
+                x = y
         }
-        return "Input X,ErrorApox and Function first!!"
-    }
-    graph()
-    {
-      console.log("igraph  =  " +igraph)
-      return (
-        <div className="app">
-          <h1>&emsp;Graph</h1>
-          <div className="row">
-            <div className="mixed-chart">
-              <Chart
-                options={this.state.options}
-                series={this.state.series}
-                type="line"
-                width="750"
-              />
-            </div>
-            <h3>&emsp; Value of XM is = {xgraph[xgraph.length-1]} </h3>
-          </div>
-        </div>
-      );
+        finalanswer = finalanswer+"XM value is "+x.toFixed(6)+" at Iteration #"+i+"<br>";
+
+        document.getElementById("finalans").innerHTML = finalanswer
+        console.log(finalanswer)
+        console.log(xarray)
+        console.log(iarray)
+        document.getElementById("finaltext").innerHTML = text
+        document.getElementById("finalx").innerHTML = xarray //pass elementID
+      }
     }
 
-
-    handleSubmit(event){
-        const {X,ErrorApox,Funct} = this.state
-        const xm = this.OnepointCalcFunction(X,ErrorApox,Funct)
-        const showgraph = this.graph();
-        event.preventDefault()
-        console.log("X = "+X)   //console log for debugging
-        console.log("Function = "+Funct)
-        console.log("Errorapox = "+ErrorApox)
-        render(xm)
-        if(X!=null&&ErrorApox!=null&&Funct!=null)
-        {
-          render(showgraph);
-          igraph.splice(0,igraph.length)
-          xgraph.splice(0,xgraph.length)
-        }
-    }
-
-    handleChange(event)
-    {this.setState({
-        [event.target.name] : event.target.value
-        })
-    }
-
-    render(){
-        return(
-          <form onSubmit={this.handleSubmit}>
+    return(<body>
+        <div>
+          <form onSubmit={getValue}>
             <div>
                 <h1>&emsp;One-point Iteration Method&emsp;</h1>
               <label htmlFor='X'>&emsp;X :&emsp;</label>
               <input 
                 name='X'
                 placeholder='Starting X' 
-                value = {this.state.X}
-                onChange={this.handleChange}
+                value = {getX}
+                onChange={event => setX(event.target.value)}
                 size='8'
               />
-              <label htmlFor='ErrorApox'>&emsp;ErrorApox :&emsp;</label>
+              <label htmlFor='ErrorApox'>&emsp;Error approximation :&emsp;</label>
               <input
                 name='ErrorApox' 
                 placeholder='ErrorApox'
-                value={this.state.ErrorApox}
-                onChange={this.handleChange}
+                value={getErrorApox}
+                onChange={event => setErrorApox(event.target.value)}
                 size='5'
               />
               </div>
               <p></p>
               <div>
-              <label htmlFor='Funct'>&emsp;Funct :&emsp;</label>
+              <label htmlFor='Funct'>&emsp;Function :&emsp;</label>
               <input
                 name='Funct' 
                 placeholder='Input function here!'
-                value={this.state.Funct}
-                onChange={this.handleChange}
+                value={getFunct}
+                onChange={event => setFunct(event.target.value)}
                 size='30'
               />
             </div>
             <p></p>
+            <p>
             <div>
             &emsp;<button>Calculate</button>
             </div>
+            </p>
+            <h2><p id = 'finalans'></p></h2>
+            <p id = 'chart'></p>
+            <p id = 'finaltext'></p>
           </form>
-        )
-      }
-    }
-
+          </div>
+          </body>
+    )
+}
 
 
 export default Onepoint

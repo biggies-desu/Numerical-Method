@@ -56,7 +56,7 @@ const Bisection = () => {
     chart.render(); //render chart (every time that state change)
 
 
-    var getValue = e => {//handle input event and pass value to function
+    var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         Funct = getFunct
         ErrorApox = getErrorApox;
