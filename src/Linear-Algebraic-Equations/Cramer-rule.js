@@ -1,102 +1,161 @@
-import { render } from "@testing-library/react";
+
 import React,{ Component } from 'react'
 import { useState } from 'react'
-class Cramer extends Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        array1 : [],
-        array2 : [],
-        col1: null,
-        row1 : null,
-  
-      }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this) 
-    }
-  
-    createMatrix(Row,Column)
-    {
-            let myarr = [];
-            for(let i=0; i < Row; i++){
-              let row = []
-              for(let j=-1; j < Column; j++){
-                let col = "-"
-                row.push(col);
-              }
-              myarr.push(row);
-              
-              render(row)
-              render(<div>
-                {
-                  console.log("ok this is epic")
-                }
-              </div>)
-            }
-            console.log(myarr)
-            
-            return myarr;
-    }
+const math = require('mathjs');
 
+//refactor code from class component to functional component
 
-    
-    calculatematrix(event)
-    {
-        event.preventDefault()
-        console.log("CAL!!!!!")
-        render("NICE DICK")
-    }
+const Cramer = () => {
+    var Size;
+    var array=[];
+    var temparray = [];
+    var answerarray = [];
+    var ratio;
 
-    handleChange(event)
-        {this.setState({
-        [event.target.name] : event.target.value
-        })
-    }
+    const [getSize, setSize] = useState('')
 
-    
-    handleSubmit(event){
-        const {Row,Column} = this.state
+    var getValue = e => {//hale input event and pass value to function
+        e.preventDefault();
+        document.getElementById('matrix').innerHTML = ""//clear matrix each clicks
+        Size = getSize
         
-        const rendermatrix = this.createMatrix(Row,Column)
-        event.preventDefault()
-        console.log("Row = "+Row)   //console log for debugging
-        console.log("Column = "+Column)
-        render(rendermatrix) //same here at line 53 i literally stuck at re-rendering
-        render
-            (<form onSubmit={this.calculatematrix}>&emsp;<p></p><button>Calculate</button></form>)
-            
-        };
-
-    
-  
-      render(){
-        return(
-          <form onSubmit={this.handleSubmit}>
-            <div>
-                <h1>&emsp;Matrix Calculator&emsp;</h1>
-              <label htmlFor='Row'>&emsp;Row :&emsp;</label>
-              <input 
-                name='Row'
-                placeholder='Row' 
-                value = {this.state.Row}
-                onChange={this.handleChange}
-                size='8'
-              />
-              <label htmlFor='Column'>&emsp;Column :&emsp;</label>
-              <input
-                name='Column' 
-                placeholder='Column'
-                value={this.state.Column}
-                onChange={this.handleChange}
-                size='8'
-              />
-              &emsp;<button>Submit</button>
-            </div>
-            
-          </form>
-        )
-      }
+        console.log(Size)
+        
+        createMatrix(Size)
     }
 
+    function createMatrix(Size)
+    {
+      for(var row=1;row<=Size;row++)
+      {
+        for(var col=0;col<=Size;col++)
+        {
+          document.getElementById('matrix').innerHTML += '<input type="text" id="matrix_index_row'+row +'col'+(col+1)+'" name="" placeholder="---" size=3>';
+        }
+        document.getElementById('matrix').innerHTML += '<br/>'
+      }
+      document.getElementById('cal_button').innerHTML = ""//create button
+      document.getElementById('cal_button').innerHTML += '<button onclick="calculate()">Calculate the matrix</button>'
+      document.getElementById('cal_button').onclick = function(){calculate()};//button call calculate function
+    }
 
-export default Cramer;
+    function calculate()
+    {
+      //clear output array
+      document.getElementById('outputarray').innerHTML = ""
+
+      //get array input
+      for(var row=1;row<=Size;row++)
+      {
+        for(var col=0;col<=Size;col++)
+        {
+          var getvalue = parseInt(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
+          temparray.push(getvalue) //get input from form then push to array
+          console.log(temparray)
+        }
+        console.log("------")
+        console.log(temparray)
+        array.push(temparray) //push each row to main array
+        temparray = []; // clear small array
+      }
+      console.log(array)
+      //show array as output
+      for(var i = 0;i<Size;i++)
+      {
+        document.getElementById('outputarray').innerHTML += "[ "
+        for(var j = 0;j<Size;j++)
+        {
+            document.getElementById('outputarray').innerHTML += ""+array[i][j]+"a("+(j+1)+") "
+        }
+        document.getElementById('outputarray').innerHTML += " = " +array[i][Size]+" ] <br/>"
+      }
+      GuessElimCalc();
+      showoutput();
+
+      array = [];//clear array for next inc array input
+    }
+
+    function GuessElimCalc()
+    {
+      console.log("guesselim")
+      //forward elimination
+      for(var s=0;s<=Size;s++)
+      {
+        for(var r=s+1;r<Size;r++)
+        {
+          ratio = array[r][s]/array[s][s];
+          //console.log(""+array[r][s]+" "+array[s][s]) checking which array will use for ratio
+          console.log(ratio)
+          for(var k=0;k<=Size;k++)
+          {
+            array[r][k] = array[r][k]-(ratio*array[s][k])
+          }
+        }
+      }
+      console.log(array);
+
+      answerarray[Size] = array[Size-1][Size]/array[Size-1][Size-1]
+
+      //backward subsitution //this part just pain in ass wtf
+      for(var a=Size-1;a>=1;a--)
+      {
+        //console.log(Size)
+        answerarray[a] = array[a-1][Size]
+        //console.log(answerarray)
+        for(var b=a+1;b<=Size;b++)
+        {
+          
+          //console.log(" "+a+" "+b)
+          let tempvar = ((array[a-1][b-1])*(answerarray[b]))
+          console.log("tempvar"+tempvar)
+          answerarray[a] = answerarray[a]-(tempvar)
+          //console.log(answerarray)
+          //console.log(" "+answerarray[a]+" "+(array[a][b])+" "+(answerarray[b]))
+        }
+        answerarray[a] = answerarray[a]/array[a-1][a-1]
+      }
+      console.log(answerarray)
+    }
+
+    function showoutput()
+    {
+      var ans = ""
+      for(var times=1;times<=Size;times++)
+      {
+        ans += "a("+times+") = "+answerarray[times]+"<br/>"
+      }
+      document.getElementById('final').innerHTML = ans
+    }
+
+    return(<body>
+        <div>
+          <form onSubmit={getValue}>
+            <div>
+                <h1>&emsp;Matrix&emsp;</h1>
+              <label htmlFor='Size'>&emsp;Size :&emsp;</label>
+              <input 
+                name='Size'
+                placeholder='Ex: 4 for 4x4' 
+                value = {getSize}
+                onChange={event => setSize(event.target.value)}
+                size='8'
+              />
+            </div>
+            <p></p>
+            <p>
+            <div>
+            &emsp;<button>Submit</button>
+            </div>
+            </p>
+            <p id = 'matrix'></p>
+            <p id = 'cal_button'></p>
+            <p id = 'outputarray'></p>
+            <p id = 'final'></p>
+          </form>
+          </div>
+          </body>
+    )
+}
+
+
+export default Cramer
