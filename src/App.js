@@ -27,6 +27,12 @@ import Secent from './Root-of-Equation/Secent';
 import Cramer from './Linear-Algebraic-Equations/Cramer-rule'
 import GuessElim from './Linear-Algebraic-Equations/Guess-Elim';
 import GuessJordan from './Linear-Algebraic-Equations/Guess-Jordan';
+import MatrixInversion from './Linear-Algebraic-Equations/Matrix-Inversion';
+import LUDecomposition from './Linear-Algebraic-Equations/LU-Decomposition';
+import CholeskyDecomposition from './Linear-Algebraic-Equations/Cholesky-Decomposition';
+// 
+import Jacobi from './Linear-Algebraic-Equations/Jacobi';
+import GuessSeidel from './Linear-Algebraic-Equations/GaussSeidel';
 
 import NewtonDevided from './Interpolation-and-Extrapolation/Newton-devided';
 import Lagrange from './Interpolation-and-Extrapolation/Lagrange';
@@ -46,9 +52,17 @@ function App() {
           <Route path="Newton" element={<Newton />} />
           <Route path="Secent" element={<Secent />} />
 
+
           <Route path="Cramer" element={<Cramer />} />
           <Route path="GuessElim" element={<GuessElim />}/>
           <Route path="GuessJordan" element={<GuessJordan />}/>
+          <Route path="MatrixInversion" element={<MatrixInversion />}/>
+          <Route path="LUDecomposition" element={<LUDecomposition />}/>
+          <Route path="CholeskyDecomposition" element={<CholeskyDecomposition />}/>
+
+          <Route path="Jacobi" element={<Jacobi />}/>
+          <Route path="GuessSeidel" element={<GuessSeidel />}/>
+
 
           <Route path="NewtonDevided" element={<NewtonDevided />}/>
           <Route path="Lagrange" element={<Lagrange />}/>

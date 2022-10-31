@@ -32,9 +32,17 @@ const Layout = () => {
               title="Linear Algebraic Equations"
               menuVariant="dark"
               >
+              <h6 class="dropdown-header">Matrix</h6>
               <NavDropdown.Item href="/Cramer">Cramer's Rule</NavDropdown.Item>
               <NavDropdown.Item href="/GuessElim">Guess Elimination</NavDropdown.Item>
               <NavDropdown.Item href="/GuessJordan">Guess-Jordan Elimination</NavDropdown.Item>
+              <NavDropdown.Item href="/MatrixInversion">Matrix Inversion</NavDropdown.Item>
+              <NavDropdown.Item href="/LUDecomposition">LU Decomposition</NavDropdown.Item>
+              <NavDropdown.Item href="/CholeskyDecomposition">Cholesky Decomposition</NavDropdown.Item>
+              <hr class="dropdown-divider"></hr>
+              <h6 class="dropdown-header">Iterational</h6>
+              <NavDropdown.Item href="/Jacobi">Jacobi Iteration</NavDropdown.Item>
+              <NavDropdown.Item href="/GuessSeidel">Guess-Seidel Iteration</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>

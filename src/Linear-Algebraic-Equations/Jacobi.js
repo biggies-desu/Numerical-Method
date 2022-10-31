@@ -1,15 +1,14 @@
-
 import React,{ Component } from 'react'
 import { useState } from 'react'
-const math = require('mathjs');
 
 //refactor code from class component to functional component
 
-const Cramer = () => {
+const Jacobi = () => {
     var Size;
     var array=[];
     var temparray = [];
     var answerarray = [];
+    var result = [];
     var ratio;
 
     const [getSize, setSize] = useState('')
@@ -20,7 +19,6 @@ const Cramer = () => {
         Size = getSize
         
         console.log(Size)
-        
         createMatrix(Size)
     }
 
@@ -49,7 +47,7 @@ const Cramer = () => {
       {
         for(var col=0;col<=Size;col++)
         {
-          var getvalue = parseInt(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
+          var getvalue = parseFloat(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
           temparray.push(getvalue) //get input from form then push to array
           console.log(temparray)
         }
@@ -69,16 +67,75 @@ const Cramer = () => {
         }
         document.getElementById('outputarray').innerHTML += " = " +array[i][Size]+" ] <br/>"
       }
+      GuessElimCalc();
+      showoutput();
 
       array = [];//clear array for next inc array input
+      answerarray= []; //clear answer
     }
 
+    function GuessElimCalc()
+    {
+      console.log("guesselim")
+      //forward elimination
+      for(var s=0;s<=Size;s++)
+      {
+        for(var r=s+1;r<Size;r++)
+        {
+          ratio = array[r][s]/array[s][s];
+          //console.log(""+array[r][s]+" "+array[s][s]) checking which array will use for ratio
+          console.log(ratio)
+          for(var k=0;k<=Size;k++)
+          {
+            array[r][k] = array[r][k]-(ratio*array[s][k])
+          }
+        }
+      }
+      console.log(array);
+
+      answerarray[Size] = array[Size-1][Size]/array[Size-1][Size-1]
+
+      //backward subsitution //this part just pain in ass wtf
+      for(var a=Size-1;a>=1;a--)
+      {
+        //console.log(Size)
+        answerarray[a] = array[a-1][Size]
+        //console.log(answerarray)
+        for(var b=a+1;b<=Size;b++)
+        {
+          
+          //console.log(" "+a+" "+b)
+          let tempvar = ((array[a-1][b-1])*(answerarray[b]))
+          console.log("tempvar"+tempvar)
+          answerarray[a] = answerarray[a]-(tempvar)
+          //console.log(answerarray)
+          //console.log(" "+answerarray[a]+" "+(array[a][b])+" "+(answerarray[b]))
+        }
+        answerarray[a] = answerarray[a]/array[a-1][a-1]
+      }
+      console.log(answerarray)
+    }
+
+    function showoutput()
+    {
+      var ans = ""//another array to store round-up value
+      answerarray.forEach(arr => result.push(arr.toFixed(6)))
+      console.log(result)
+      for(var times=0;times<Size;times++)
+      {
+        ans += "a("+(times+1)+") = "+result[times]+"<br/>"
+      }
+      document.getElementById('final').innerHTML = ans
+      array.splice(0,array.length)
+      answerarray.splice(0,answerarray.length)
+      result.splice(0,result.length)
+    }
 
     return(<body>
         <div>
           <form onSubmit={getValue}>
             <div>
-                <h1>&emsp;Cramer's Rule&emsp;</h1>
+                <h1>&emsp;Jacobi Iteration&emsp;</h1>
               <label htmlFor='Size'>&emsp;Size :&emsp;</label>
               <input 
                 name='Size'
@@ -97,7 +154,7 @@ const Cramer = () => {
             <p id = 'matrix'></p>
             <p id = 'cal_button'></p>
             <p id = 'outputarray'></p>
-            <p id = 'final'></p>
+            <h3><p id = 'final'></p></h3>
           </form>
           </div>
           </body>
@@ -105,4 +162,4 @@ const Cramer = () => {
 }
 
 
-export default Cramer
+export default Jacobi

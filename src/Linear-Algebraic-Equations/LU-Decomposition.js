@@ -5,7 +5,7 @@ const math = require('mathjs');
 
 //refactor code from class component to functional component
 
-const Cramer = () => {
+const LUDecomposition = () => {
     var Size;
     var array=[];
     var temparray = [];
@@ -78,7 +78,7 @@ const Cramer = () => {
         <div>
           <form onSubmit={getValue}>
             <div>
-                <h1>&emsp;Cramer's Rule&emsp;</h1>
+                <h1>&emsp;LU Decomposition&emsp;</h1>
               <label htmlFor='Size'>&emsp;Size :&emsp;</label>
               <input 
                 name='Size'
@@ -105,4 +105,4 @@ const Cramer = () => {
 }
 
 
-export default Cramer
+export default LUDecomposition
