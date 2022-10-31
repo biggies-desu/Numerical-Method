@@ -8,6 +8,7 @@ const GuessElim = () => {
     var array=[];
     var temparray = [];
     var answerarray = [];
+    var result = [];
     var ratio;
 
     const [getSize, setSize] = useState('')
@@ -46,7 +47,7 @@ const GuessElim = () => {
       {
         for(var col=0;col<=Size;col++)
         {
-          var getvalue = parseInt(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
+          var getvalue = parseFloat(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
           temparray.push(getvalue) //get input from form then push to array
           console.log(temparray)
         }
@@ -117,12 +118,17 @@ const GuessElim = () => {
 
     function showoutput()
     {
-      var ans = ""
-      for(var times=1;times<=Size;times++)
+      var ans = ""//another array to store round-up value
+      answerarray.forEach(arr => result.push(arr.toFixed(6)))
+      console.log(result)
+      for(var times=0;times<Size;times++)
       {
-        ans += "a("+times+") = "+answerarray[times]+"<br/>"
+        ans += "a("+(times+1)+") = "+result[times]+"<br/>"
       }
       document.getElementById('final').innerHTML = ans
+      array.splice(0,array.length)
+      answerarray.splice(0,answerarray.length)
+      result.splice(0,result.length)
     }
 
     return(<body>
