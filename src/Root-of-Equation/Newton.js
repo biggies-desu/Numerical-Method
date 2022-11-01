@@ -91,8 +91,8 @@ const Newton = () => {
             return exprfxprime.evaluate({x: input});
         }
         
-        if(x!=null && Funct!=null && inputerrorapox!=null && i!==100){//bisection function
-            while(ErrorApox_Answer>inputerrorapox)
+        if(x!=null && Funct!=null && inputerrorapox!=null){//bisection function
+            while(ErrorApox_Answer>inputerrorapox && i!==100)
             {
                 deltaX = ((-fx(x))/(fxprime(x)));
                 x = x+deltaX

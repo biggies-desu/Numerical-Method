@@ -1,22 +1,25 @@
+import { sum } from 'mathjs';
 import React,{ Component } from 'react'
 import { useState } from 'react'
 
 //refactor code from class component to functional component
 
 const Jacobi = () => {
-    var Size;
+    var Size,ErrorApox;
     var array=[];
     var temparray = [];
-    var answerarray = [];
-    var result = [];
-    var ratio;
+    var XArray = [];
+    var XoldArray= [];
+    var XError = []
 
     const [getSize, setSize] = useState('')
+    const [getError, setError] = useState('')
 
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         document.getElementById('matrix').innerHTML = ""//clear matrix each clicks
         Size = getSize
+        ErrorApox  = getError;
         
         console.log(Size)
         createMatrix(Size)
@@ -67,68 +70,81 @@ const Jacobi = () => {
         }
         document.getElementById('outputarray').innerHTML += " = " +array[i][Size]+" ] <br/>"
       }
-      GuessElimCalc();
+
+      //set all Xarrayvalue to 0 as default
+      for(var asd=0;asd<Size;asd++)
+      {
+        XoldArray[asd]=0;
+      }
+      console.log(XArray)
+      JacobiCalc();
       showoutput();
 
-      array = [];//clear array for next inc array input
-      answerarray= []; //clear answer
+      //array = [];//clear array for next inc array input
+      XArray= []; //clear answer
+      XError = [];
+      XoldArray=[];
     }
 
-    function GuessElimCalc()
+    const islessthanError = (err) =>err>ErrorApox
+    //if less than 0.000001 return true
+
+    function JacobiCalc()
     {
-      console.log("guesselim")
-      //forward elimination
-      for(var s=0;s<=Size;s++)
+      
+      console.log("JacobiCalc")
+      console.log(array)
+      //Jacobi function
+      do{
+      for(var i=0;i<Size;i++)
       {
-        for(var r=s+1;r<Size;r++)
+        var ss = 0;
+        for(var j=0;j<Size;j++)
         {
-          ratio = array[r][s]/array[s][s];
-          //console.log(""+array[r][s]+" "+array[s][s]) checking which array will use for ratio
-          console.log(ratio)
-          for(var k=0;k<=Size;k++)
+          //find sumof diff
+          if(j!==i)
           {
-            array[r][k] = array[r][k]-(ratio*array[s][k])
+            ss+=array[i][j]*XoldArray[j]
           }
+          //console.log("ss = "+ss);
         }
+        XArray[i] = ((array[i][Size])-ss)/array[i][i];
+        /*console.log(XArray[i])
+        console.log(XArray);
+        console.log("i = "+i)*/
+        /*console.log(array[i][Size])
+        console.log("-ss = "+ss)
+        console.log(array[i][i])*/
       }
-      console.log(array);
-
-      answerarray[Size] = array[Size-1][Size]/array[Size-1][Size-1]
-
-      //backward subsitution //this part just pain in ass wtf
-      for(var a=Size-1;a>=1;a--)
-      {
-        //console.log(Size)
-        answerarray[a] = array[a-1][Size]
-        //console.log(answerarray)
-        for(var b=a+1;b<=Size;b++)
+      console.log("Xarray"+XArray)
+      //replace answer for each iteration with oldanswer
+      for(var k=0;k<Size;k++)
         {
-          
-          //console.log(" "+a+" "+b)
-          let tempvar = ((array[a-1][b-1])*(answerarray[b]))
-          console.log("tempvar"+tempvar)
-          answerarray[a] = answerarray[a]-(tempvar)
-          //console.log(answerarray)
-          //console.log(" "+answerarray[a]+" "+(array[a][b])+" "+(answerarray[b]))
+          XError[k] = Math.abs((XArray[k]-XoldArray[k])/XArray[0])*100;
+          XoldArray[k] = XArray[k]
         }
-        answerarray[a] = answerarray[a]/array[a-1][a-1]
-      }
-      console.log(answerarray)
+
+      
+      /*console.log("XoldArray"+XoldArray)
+      console.log("XError"+XError)*/
+      }while(XError.every(islessthanError))
     }
+
 
     function showoutput()
     {
-      var ans = ""//another array to store round-up value
-      answerarray.forEach(arr => result.push(arr.toFixed(6)))
-      console.log(result)
+      var ans = ""
+      //console.log(XArray)
       for(var times=0;times<Size;times++)
       {
-        ans += "a("+(times+1)+") = "+result[times]+"<br/>"
+        ans += "a("+(times+1)+") = "+(XArray[times].toFixed(6))+"<br/>"
       }
       document.getElementById('final').innerHTML = ans
-      array.splice(0,array.length)
-      answerarray.splice(0,answerarray.length)
-      result.splice(0,result.length)
+      //set all array to null  for get next inc value
+      XArray.splice(0,XArray.length)
+      XoldArray.splice(0,XoldArray.length)
+      XError.splice(0,XError.length)
+
     }
 
     return(<body>
@@ -142,6 +158,14 @@ const Jacobi = () => {
                 placeholder='Ex: 4 for 4x4' 
                 value = {getSize}
                 onChange={event => setSize(event.target.value)}
+                size='8'
+              />
+              <label htmlFor='Error_Apoximate'>&emsp;Error_Apoximate :&emsp;</label>
+              <input 
+                name='Error_Apoximate'
+                placeholder='Error' 
+                value = {getError}
+                onChange={event => setError(event.target.value)}
                 size='8'
               />
             </div>

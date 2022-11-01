@@ -86,20 +86,22 @@ const Onepoint = () => {
             return exprfx.evaluate({x: input}); //replace any x in math expression with input(x)
         }
 
-        if(x!=null && Funct!=null && inputerrorapox!=null && i!==100){//bisection function
-            while(ErrorApox_Answer>inputerrorapox)
+        if(x!=null && Funct!=null && inputerrorapox!=null){//bisection function
+            while(ErrorApox_Answer>inputerrorapox && i!==100)
             {
                 y=fx(x)
                 ErrorApox_Answer = Math.abs((y-x)/x)*100;
-                i++
+                
                 xarray.push(x.toFixed(6));
                 iarray.push(i) //push to store in array (use for render graph)
                 console.log("X = "+x)
                 console.log("Errorapox = "+ErrorApox_Answer)
-                text = text+"At Iteration #"+i+" XM = "+x.toFixed(6)+" with Errorapox of "+ErrorApox_Answer.toFixed(6)+"<br>"    //for show every iteration with xm value and errorapox
+                i++
+                text = text+"At Iteration #"+(i)+" XM = "+x.toFixed(6)+" with Errorapox of "+ErrorApox_Answer.toFixed(6)+"<br>"    //for show every iteration with xm value and errorapox
+                
                 x = y
         }
-        finalanswer = finalanswer+"XM value is "+x.toFixed(6)+" at Iteration #"+i+"<br>";
+        finalanswer = finalanswer+"XM value is "+x.toFixed(6)+" at Iteration #"+(i-1)+"<br>";
 
         document.getElementById("finalans").innerHTML = finalanswer
         console.log(finalanswer)

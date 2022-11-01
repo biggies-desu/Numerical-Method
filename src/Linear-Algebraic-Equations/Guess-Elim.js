@@ -10,6 +10,7 @@ const GuessElim = () => {
     var answerarray = [];
     var result = [];
     var ratio;
+    var sssss = ''
 
     const [getSize, setSize] = useState('')
 
@@ -54,13 +55,15 @@ const GuessElim = () => {
         console.log("------")
         console.log(temparray)
         array.push(temparray) //push each row to main array
+        //
+        document.getElementById('output2').innerHTML += sssss+array+"<br/>"
         temparray = []; // clear small array
       }
       console.log(array)
       //show array as output
       for(var i = 0;i<Size;i++)
       {
-        document.getElementById('outputarray').innerHTML += "[ "
+        
         for(var j = 0;j<Size;j++)
         {
             document.getElementById('outputarray').innerHTML += ""+array[i][j]+"a("+(j+1)+") "
@@ -70,7 +73,7 @@ const GuessElim = () => {
       GuessElimCalc();
       showoutput();
 
-      array = [];//clear array for next inc array input
+      //array = [];//clear array for next inc array input
       answerarray= []; //clear answer
     }
 
@@ -88,30 +91,38 @@ const GuessElim = () => {
           for(var k=0;k<=Size;k++)
           {
             array[r][k] = array[r][k]-(ratio*array[s][k])
+            //document.getElementById('output2').innerHTML += sssss+array+"<br/>"
           }
         }
+        //document.getElementById('output2').innerHTML += sssss+array+"<br/>"
       }
       console.log(array);
 
       answerarray[Size] = array[Size-1][Size]/array[Size-1][Size-1]
+      //document.getElementById('output2').innerHTML += sssss+answerarray+"<br/>"
 
       //backward subsitution //this part just pain in ass wtf
       for(var a=Size-1;a>=1;a--)
       {
         //console.log(Size)
         answerarray[a] = array[a-1][Size]
+        //document.getElementById('output2').innerHTML += sssss+answerarray+"<br/>"
         //console.log(answerarray)
         for(var b=a+1;b<=Size;b++)
         {
           
           //console.log(" "+a+" "+b)
           let tempvar = ((array[a-1][b-1])*(answerarray[b]))
+          //document.getElementById('output2').innerHTML += "tempvar = "+tempvar+"<br/>"
           console.log("tempvar"+tempvar)
           answerarray[a] = answerarray[a]-(tempvar)
+          //document.getElementById('output2').innerHTML += answerarray+"<br/>"
+          //console.log(array)
           //console.log(answerarray)
           //console.log(" "+answerarray[a]+" "+(array[a][b])+" "+(answerarray[b]))
         }
         answerarray[a] = answerarray[a]/array[a-1][a-1]
+        
       }
       console.log(answerarray)
     }
@@ -126,7 +137,7 @@ const GuessElim = () => {
         ans += "a("+(times+1)+") = "+result[times]+"<br/>"
       }
       document.getElementById('final').innerHTML = ans
-      array.splice(0,array.length)
+      //array.splice(0,array.length)
       answerarray.splice(0,answerarray.length)
       result.splice(0,result.length)
     }
@@ -154,6 +165,7 @@ const GuessElim = () => {
             <p id = 'matrix'></p>
             <p id = 'cal_button'></p>
             <p id = 'outputarray'></p>
+            
             <h3><p id = 'final'></p></h3>
           </form>
           </div>

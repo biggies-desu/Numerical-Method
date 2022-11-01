@@ -92,8 +92,8 @@ const Secent = () => {
             return exprfx.evaluate({x: input}); //replace any x in math expression with input(x)
         }
         
-        if(x0!=null && x1!=null && Funct!=null && inputerrorapox!=null && i!==100){//bisection function
-            while(ErrorApox_Answer>inputerrorapox)
+        if(x0!=null && x1!=null && Funct!=null && inputerrorapox!=null){//bisection function
+            while(ErrorApox_Answer>inputerrorapox && i!==100)
              {
                 console.log("x0 = "+x0)
                 console.log("x1 = "+x1)

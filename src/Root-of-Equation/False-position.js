@@ -92,8 +92,8 @@ const Falseposition = () => {
         }
         
 
-        if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null && i!==100){//FalsePosition function
-            while(ErrorApox_Answer>inputerrorapox)
+        if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null){//FalsePosition function
+            while(ErrorApox_Answer>inputerrorapox && i!==100)
             {
                 xm=((xl*fx(xr))-(xr*fx(xl)))/(fx(xr)-fx(xl));
                 if(fx(xm)*fx(xr)<0)

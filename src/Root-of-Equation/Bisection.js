@@ -92,8 +92,8 @@ const Bisection = () => {
         }
         
 
-        if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null && i!==100){//bisection function
-        while(ErrorApox_Answer>inputerrorapox)
+        if(xl!=null && xr!=null && Funct!=null && inputerrorapox!=null){//bisection function
+        while(ErrorApox_Answer>inputerrorapox && i!==100)
             {   
                 xm=(xl+xr)/2;
                 if(fx(xm)*fx(xr)<0)
