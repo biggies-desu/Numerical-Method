@@ -1,4 +1,3 @@
-import { sum } from 'mathjs';
 import React,{ Component } from 'react'
 import { useState } from 'react'
 
@@ -11,6 +10,7 @@ const Jacobi = () => {
     var XArray = [];
     var XoldArray= [];
     var XError = []
+    var iteration = 0;
 
     const [getSize, setSize] = useState('')
     const [getError, setError] = useState('')
@@ -80,10 +80,11 @@ const Jacobi = () => {
       JacobiCalc();
       showoutput();
 
-      //array = [];//clear array for next inc array input
+      array = [];//clear array for next inc array input
       XArray= []; //clear answer
       XError = [];
       XoldArray=[];
+      iteration=0;
     }
 
     const islessthanError = (err) =>err>ErrorApox
@@ -91,7 +92,6 @@ const Jacobi = () => {
 
     function JacobiCalc()
     {
-      
       console.log("JacobiCalc")
       console.log(array)
       //Jacobi function
@@ -124,7 +124,7 @@ const Jacobi = () => {
           XoldArray[k] = XArray[k]
         }
 
-      
+      iteration++;
       /*console.log("XoldArray"+XoldArray)
       console.log("XError"+XError)*/
       }while(XError.every(islessthanError))
@@ -135,6 +135,7 @@ const Jacobi = () => {
     {
       var ans = ""
       //console.log(XArray)
+      ans+= "****STOPPED AT ITERATION #"+iteration+"****<br/>"
       for(var times=0;times<Size;times++)
       {
         ans += "a("+(times+1)+") = "+(XArray[times].toFixed(6))+"<br/>"
