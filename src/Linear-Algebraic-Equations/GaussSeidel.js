@@ -132,13 +132,23 @@ const GuessSeidel = () => {
     function showoutput()
     {
       var ans = ""
+      var proof = "Proof => "
+      var proof_result = 0;
       //console.log(XArray)
       ans+= "****STOPPED AT ITERATION #"+iteration+"****<br/>"
       for(var times=0;times<Size;times++)
       {
         ans += "a("+(times+1)+") = "+(XArray[times].toFixed(6))+"<br/>"
+        proof += "  "+array[0][times]+"("+(XArray[times].toFixed(6))+") "
       }
+      for(var times2=0;times2<Size;times2++)
+      {     
+        proof_result += (array[0][times2]*XArray[times2]);
+      }
+      proof += " = "+(proof_result.toFixed(6));
       document.getElementById('final').innerHTML = ans
+      document.getElementById('proofresult').innerHTML = proof
+      console.log(proof);
       //set all array to null  for get next inc value
       XArray.splice(0,XArray.length)
       XoldArray.splice(0,XoldArray.length)
@@ -178,6 +188,7 @@ const GuessSeidel = () => {
             <p id = 'cal_button'></p>
             <p id = 'outputarray'></p>
             <h3><p id = 'final'></p></h3>
+            <p id = 'proofresult'></p>
           </form>
           </div>
           </body>

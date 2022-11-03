@@ -1,3 +1,4 @@
+import { size } from 'mathjs';
 import React,{ Component } from 'react'
 import { useState } from 'react'
 
@@ -126,6 +127,7 @@ const GuessElim = () => {
         ans += "a("+(times+1)+") = "+result[times]+"<br/>"
       }
       document.getElementById('final').innerHTML = ans
+
       array.splice(0,array.length)
       answerarray.splice(0,answerarray.length)
       result.splice(0,result.length)
