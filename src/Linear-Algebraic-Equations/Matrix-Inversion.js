@@ -10,7 +10,11 @@ const MatrixInversion = () => {
     var array=[];
     var temparray = [];
     var answerarray = [];
-    var ratio;
+    var resultinv = [];
+    var result = [];
+    var matrix_A = [];
+    var matrix_A_inverse = [];
+    var matrix_b = [];
 
     const [getSize, setSize] = useState('')
 
@@ -20,7 +24,6 @@ const MatrixInversion = () => {
         Size = getSize
         
         console.log(Size)
-        
         createMatrix(Size)
     }
 
@@ -49,7 +52,7 @@ const MatrixInversion = () => {
       {
         for(var col=0;col<=Size;col++)
         {
-          var getvalue = parseInt(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
+          var getvalue = parseFloat(document.getElementById('matrix_index_row'+row +'col'+(col+1)).value)
           temparray.push(getvalue) //get input from form then push to array
           console.log(temparray)
         }
@@ -69,10 +72,83 @@ const MatrixInversion = () => {
         }
         document.getElementById('outputarray').innerHTML += " = " +array[i][Size]+" ] <br/>"
       }
+      MatrixInversionCal();
+      showoutput();
 
-      array = [];//clear array for next inc array input
+      //this is basically quite a mess but i have to clear a thing up for next incoming input
+      array = [];
+      answerarray= [];
+      result = [];
+      resultinv = []
+      matrix_A = [];
+      matrix_b = []
+      matrix_A_inverse = [];
     }
 
+    function MatrixInversionCal()
+    {
+      //get array value
+      var temparrayCalc = [];
+      var ending_index = parseInt(Size)+1 //get index of last element from each row
+      for(var row=1;row<=Size;row++)
+      {
+        //console.log(ending_index)
+        var temp3 = document.getElementById('matrix_index_row'+(row)+'col'+(ending_index)).value //get-push for matrix B
+        matrix_b.push(temp3)
+        for(var col=0;col<Size;col++)
+        {
+          console.log("row = "+(row)+"col = "+(col+1));
+          var temp2 = document.getElementById('matrix_index_row'+(row)+'col'+(col+1)).value //get-push matrix A
+          temparrayCalc.push(temp2)
+        }
+        matrix_A.push(temparrayCalc)
+        temparrayCalc = [];
+    }
+    //inverse of matrix A
+    matrix_A_inverse = math.inv(matrix_A);
+    
+    console.log(matrix_A);
+    console.log(matrix_A_inverse);
+    console.log(matrix_b);
+    
+    answerarray = math.multiply(matrix_A_inverse,matrix_b)
+    console.log(answerarray)
+  }
+
+    function showoutput()
+    {
+      var ans = ""//another array to store round-up value
+
+      var invers =" ==== Inversed Matrix ====<br/>"
+
+      answerarray.forEach(arr2 => result.push(arr2.toFixed(6)))
+      var times2 = 0; //index array resultinv
+      console.log(result)
+      for(var times=0;times<Size;times++)
+      {
+        matrix_A_inverse[times].forEach(arr => resultinv.push(arr.toFixed(6))) //convert all array element to 6 digit
+        ans += "a("+(times+1)+") = "+result[times]+"<br/>"
+      }
+      console.log(resultinv);
+      for(var k=0;k<Size;k++) //get element from resultinv and print out
+      {
+        invers += "||"
+        for(var l=0;l<Size;l++)
+        {
+          invers += ""+resultinv[times2]+" "
+          times2++;
+        }  
+        invers += "||<br/>"
+      }
+      document.getElementById('invoutput').innerHTML = invers
+      document.getElementById('final').innerHTML = ans
+
+      
+      array.splice(0,array.length)
+      answerarray.splice(0,answerarray.length)
+      result.splice(0,result.length)
+      resultinv.splice(0,resultinv.length);
+    }
 
     return(<body>
         <div>
@@ -97,7 +173,8 @@ const MatrixInversion = () => {
             <p id = 'matrix'></p>
             <p id = 'cal_button'></p>
             <p id = 'outputarray'></p>
-            <p id = 'final'></p>
+            <p id = 'invoutput'></p>
+            <h3><p id = 'final'></p></h3>
           </form>
           </div>
           </body>
