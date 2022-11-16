@@ -38,6 +38,8 @@ import NewtonDevided from './Interpolation-and-Extrapolation/Newton-devided';
 import Lagrange from './Interpolation-and-Extrapolation/Lagrange';
 import Sprine from './Interpolation-and-Extrapolation/Sprine';
 
+import Regression from './Regression/Regression';
+
 function App() {
   const handleSelect = (eventKey) => alert(`${eventKey}`);//ตั้งไปงั้น
   return (
@@ -67,6 +69,8 @@ function App() {
           <Route path="NewtonDevided" element={<NewtonDevided />}/>
           <Route path="Lagrange" element={<Lagrange />}/>
           <Route path="Sprine" element={<Sprine />}/>
+
+          <Route path="Regression" element={<Regression />}/>
         </Route>
       </Routes>
     </BrowserRouter>

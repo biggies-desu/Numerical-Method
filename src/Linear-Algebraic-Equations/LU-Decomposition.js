@@ -2,6 +2,7 @@
 import React,{ Component } from 'react'
 import { useState } from 'react'
 const math = require('mathjs');
+//this one likely not gonna finish in time
 
 //refactor code from class component to functional component
 

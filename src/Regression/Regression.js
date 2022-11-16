@@ -1,9 +1,10 @@
+
 import React,{ Component } from 'react'
 import { useState } from 'react'
 
 //refactor code from class component to functional component
 
-const Langrange = () => {
+const Regression = () => {
     var Size
     var Xi;
     var array=[];
@@ -130,7 +131,7 @@ const Langrange = () => {
         <div>
           <form onSubmit={getValue}>
             <div>
-                <h1>&emsp;Langrange Interpolation&emsp;</h1>
+                <h1>&emsp;Regression&emsp;</h1>
               <label htmlFor='Size'>&emsp;Number of data :&emsp;</label>
               <input 
                 name='Size'
@@ -168,4 +169,4 @@ const Langrange = () => {
 }
 
 
-export default Langrange
+export default Regression

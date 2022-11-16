@@ -3,12 +3,13 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Button from 'react-bootstrap/Button';
 import './css/styles.css';
 
 const Layout = () => {
     return (
       <>
-      <Navbar variant="dark" bg="dark" expand="lg">
+      <Navbar collapseOnSelect variant="dark" bg="dark" expand="lg">
       <Container fluid>
         <Navbar.Brand href="/">Numerical Methods</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-dark-example" />
@@ -55,6 +56,9 @@ const Layout = () => {
               <NavDropdown.Item href="/Lagrange">Lagrange Polynomial</NavDropdown.Item>
               <NavDropdown.Item href="/Sprine">Sprine Interpolation</NavDropdown.Item>
             </NavDropdown>
+          </Nav>
+          <Nav>
+          <Button variant="dark" href="/Regression" >Regression</Button>
           </Nav>
         </Navbar.Collapse>
         <Nav>

@@ -45,6 +45,7 @@ const Cramer = () => {
 
     function calculate()
     {
+      calculate.preventDefault();
       //clear output array
       document.getElementById('outputarray').innerHTML = ""
 
