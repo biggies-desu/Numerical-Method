@@ -1,6 +1,7 @@
-
-import React,{ Component } from 'react'
+import React from 'react'
 import { useState } from 'react'
+import ApexCharts from 'apexcharts'
+import { propTypes } from 'react-bootstrap/esm/Image';
 const math = require('mathjs');
 //refactor code from class component to functional component
 //THIS ONE ONLY FOR LINEAR AND POLYNOMIAL REGRESSION
@@ -9,18 +10,68 @@ const Regression = () => {
     var array=[];
     var temparray = [];
     var Xarray=[];
+    var Xarray2=[];
     var Yarray=[]
+    var Y_Regressionarray = []
 
-    var tempRegression = [];
+    var tempRegression = []; //regression calculate part
     var MatrixA = [];
     var MatrixA_Inv = [];
     var MatrixB = [];
     var answerarray = []
 
+
     const [getSize, setSize] = useState('')
     const [getDegree,setDegree] = useState('')
     const [getXi,setXi] = useState('')
 
+    var options = { //graph related
+      chart: {
+        type: 'line',
+        width: '750'
+      },
+      xaxis: {
+      },
+      series: [{
+        name: "Y (Input)",
+        data: Yarray
+      },
+      {
+        name: "Y with regression",
+        data: Y_Regressionarray
+      }
+      ]
+      ,
+      grid: {
+          row: {
+              colors: ['#e5e5e5', 'transparent'],
+              opacity: 0.5
+          }, 
+          column: {
+              colors: ['#f8f8f8', 'transparent'],
+          }, 
+          xaxis: {
+            lines: {
+              show: true
+            }
+          }
+        },
+        title: {
+          text: 'Regression Graph',
+          align: 'center',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false
+        },
+        stroke: {
+          dashArray: 8,
+          curve: 'smooth'
+        }
+    }
+    
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render(); //render chart (every time that state change)
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         document.getElementById('matrix').innerHTML = ""//clear matrix each clicks
@@ -32,6 +83,7 @@ const Regression = () => {
         console.log("Degree = "+Degree)
         console.log("Xi = "+Xi)
         createMatrix(Size)
+        
     }
 
     function createMatrix(Size)
@@ -80,26 +132,37 @@ const Regression = () => {
       }
 
       //seperate X and Y
-      for(var i=0;i<Size;i++)
+      for(var a=0;a<Size;a++)
       {
-        Xarray.push(array[i][0]);
+        Xarray.push(array[a][0]);
       }
-      for(var i=0;i<Size;i++)
+      for(var b=0;b<Size;b++)
       {
-        Yarray.push(array[i][1]);
+        Yarray.push(array[b][1]);
+      }
+      for(var c=0;c<Size;c++)
+      {
+        Xarray2.push(Xarray[c].toString())
       }
       console.log(Xarray)
       console.log(Yarray)
+      console.log(Xarray2);
+
+
+      //push x for plot graph since somehow it didnt work
 
       RegressionCalc();
       printout();
 
       array = [];//clear array for next inc array input
-      Xarray =[];
-      Yarray = [];
       tempRegression = [];
       MatrixA = [];
       MatrixB = [];
+      Y_Regressionarray = []
+      answerarray = [];
+      
+      Xarray =[];
+      Yarray = [];
     }
 
     function RegressionCalc()
@@ -158,24 +221,41 @@ const Regression = () => {
 
     function printout()
     {
-      let sumproof = 0;
+      
       document.getElementById('final').innerHTML = ""
-      document.getElementById('proof').innerHTML = "g("+Xi+") ="
+      document.getElementById('proof').innerHTML = ""
+      
         for(var i = 0;i<=Degree;i++)
         {
           document.getElementById('final').innerHTML += "a("+i+") = "+answerarray[i]+"<Br/>"
         }//print out answer
+        console.log(Xi)
 
-        //proof
-        
-        for(var j = 0;j<=Degree;j++)
+        //proof if insert xi
+        if(Xi!=='')
         {
-          document.getElementById('proof').innerHTML += "+("+answerarray[j]+"*"+Math.pow(Xi,j)+")";
-          sumproof += answerarray[j]*Math.pow(Xi,j);
+          let sumproof = 0;
+          document.getElementById('proof').innerHTML = "g("+Xi+") ="
+          for(var j = 0;j<=Degree;j++)
+          {
+            document.getElementById('proof').innerHTML += "+("+answerarray[j]+"*"+Math.pow(Xi,j)+")";
+            sumproof += answerarray[j]*Math.pow(Xi,j);
+          }
+           document.getElementById('proof').innerHTML += " =" + sumproof;
         }
-        document.getElementById('proof').innerHTML += " =" + sumproof;
         
-
+        //แทนค่า aทุกตัวในสมาการหหา X ที่ใส่ input plot graph
+        for(var k = 0;k<Xarray.length;k++)
+        {
+          let regressionresult = 0;
+          for(var l = 0;l<=Degree;l++)
+          {
+            regressionresult += answerarray[l]*Math.pow(Xarray[k],l);
+          }
+          Y_Regressionarray.push(regressionresult)
+        }
+        console.log(Xarray)
+        console.log(Yarray)
     }
 
     return(<body>
@@ -220,6 +300,7 @@ const Regression = () => {
             <p id = 'outputarray'></p>
             <h3><p id = 'final'></p></h3>
             <p id = 'proof'></p>
+            <p id = 'chart'></p>
           </form>
           </div>
           </body>
