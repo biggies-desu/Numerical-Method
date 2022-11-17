@@ -1,27 +1,35 @@
 
 import React,{ Component } from 'react'
 import { useState } from 'react'
-
+const math = require('mathjs');
 //refactor code from class component to functional component
-
+//THIS ONE ONLY FOR LINEAR AND POLYNOMIAL REGRESSION
 const Regression = () => {
-    var Size
-    var Xi;
+    var Size,Degree,Xi;
     var array=[];
     var temparray = [];
-    var Lterm = [];
-    var sum = 0.0;
+    var Xarray=[];
+    var Yarray=[]
+
+    var tempRegression = [];
+    var MatrixA = [];
+    var MatrixA_Inv = [];
+    var MatrixB = [];
+    var answerarray = []
 
     const [getSize, setSize] = useState('')
-    const [getXi, setXi] = useState('')
+    const [getDegree,setDegree] = useState('')
+    const [getXi,setXi] = useState('')
 
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         document.getElementById('matrix').innerHTML = ""//clear matrix each clicks
         Size = getSize
-        Xi = getXi
+        Degree = getDegree
+        Xi = getXi;
         
         console.log("Size = "+Size)
+        console.log("Degree = "+Degree)
         console.log("Xi = "+Xi)
         createMatrix(Size)
     }
@@ -55,14 +63,12 @@ const Regression = () => {
           temparray.push(getvalue) //get input from form then push to array
           console.log(temparray)
         }
-        console.log("------")
         console.log(temparray)
         array.push(temparray) //push each row to main array
         temparray = []; // clear small array
       }
       console.log(array)
       //show array as output
-
       for(var i = 0;i<Size;i++)
       {
         document.getElementById('outputarray').innerHTML += "[ "
@@ -73,65 +79,110 @@ const Regression = () => {
         }
       }
 
-      LangrangeCalc();
-      printEachLterm();
+      //seperate X and Y
+      for(var i=0;i<Size;i++)
+      {
+        Xarray.push(array[i][0]);
+      }
+      for(var i=0;i<Size;i++)
+      {
+        Yarray.push(array[i][1]);
+      }
+      console.log(Xarray)
+      console.log(Yarray)
+
+      RegressionCalc();
+      printout();
 
       array = [];//clear array for next inc array input
-      Xi = 0;
-      Lterm = [];
+      Xarray =[];
+      Yarray = [];
+      tempRegression = [];
+      MatrixA = [];
+      MatrixB = [];
     }
 
-    function LangrangeCalc()
+    function RegressionCalc()
     {
-      console.log("LangrangeCalc")
-      console.log(array)
-
-        //langrange cal
-        for(var a=0;a<Size;a++)
+      console.log("RegressionCalc")
+      
+        //Regression cal
+        //get matrix A
+        for(var row=0;row<=Degree;row++)
         {
-            let term = array[a][1];
-            for(var b=0;b<Size;b++)
+            for(var col=0;col<=Degree;col++)
             {
-                if(b!=a)
-                {
-                    term = term*(Xi - array[b][0])/(array[a][0]-array[b][0])
-                }
+                let mul = row+col
+                tempRegression.push(SumofSquareX(Xarray,mul)); //call function to mul the sum
             }
-            // Add current term to result
-            sum = sum + term;
-            Lterm.push(term)
+            MatrixA.push(tempRegression) //push to array matrix A
+            tempRegression = []; //clear array for next inc row
         }
-      console.log("sum = "+sum)
-      document.getElementById('final').innerHTML = "f("+Xi+") = "+sum.toFixed(6);
-      sum = 0;
+        console.log(MatrixA)
+        //get matrix B
+        for(var row2=0;row2<=Degree;row2++)
+        {
+            //console.log(row2)
+            tempRegression.push(SumofSquareY(Xarray,Yarray,row2)); //call function to mul the sum
+            MatrixB.push(tempRegression)  //push to array matrix B
+            tempRegression = []; //clear array for next inc row
+        }
+        console.log(MatrixB)
 
+        //find each a with using Matrix inverse
+        MatrixA_Inv = math.inv(MatrixA)
+        answerarray = math.multiply(MatrixA_Inv,MatrixB);
+        console.log(MatrixA_Inv)
+        console.log(answerarray)
     }
 
-    function printEachLterm()
+    function SumofSquareX(arr,mul) //function return X^...
     {
-        let proofsum = 0;
-        document.getElementById('printLterm').innerHTML = "Each L(i)F(x) term <br/>"
-        for(var i = 0;i<Size;i++) //print out each term
-        {
-            document.getElementById('printLterm').innerHTML += "L"+i+"f("+i+")"+" = "+Lterm[i]+"<br/>";
-        }
-        for(var j = 0;j<Size;j++) //proof
-        {
-            document.getElementById('printLterm').innerHTML += "+ ("+Lterm[j]+") ";
-        }
-        for(var k = 0;k<Size;k++) //proof-sum
-        {
-            proofsum += Lterm[k];
-        }
-        document.getElementById('printLterm').innerHTML += "= "+proofsum;
+      let sumofsqrt = 0.0;
+      for(var i = 0;i<Size;i++)
+      {
+        sumofsqrt += Math.pow(arr[i],mul);
+      }
+      return sumofsqrt
     }
 
+    function SumofSquareY(arr,arr2,mul2) //function return X^...*Y
+    {
+      let sumofsqrt2 = 0.0;
+      for(var i = 0;i<Size;i++)
+      {
+        sumofsqrt2 += Math.pow(arr[i],mul2)*arr2[i]
+      }
+      return sumofsqrt2
+    }
+
+    function printout()
+    {
+      let sumproof = 0;
+      document.getElementById('final').innerHTML = ""
+      document.getElementById('proof').innerHTML = "g("+Xi+") ="
+        for(var i = 0;i<=Degree;i++)
+        {
+          document.getElementById('final').innerHTML += "a("+i+") = "+answerarray[i]+"<Br/>"
+        }//print out answer
+
+        //proof
+        
+        for(var j = 0;j<=Degree;j++)
+        {
+          document.getElementById('proof').innerHTML += "+("+answerarray[j]+"*"+Math.pow(Xi,j)+")";
+          sumproof += answerarray[j]*Math.pow(Xi,j);
+        }
+        document.getElementById('proof').innerHTML += " =" + sumproof;
+        
+
+    }
 
     return(<body>
         <div>
           <form onSubmit={getValue}>
             <div>
-                <h1>&emsp;Regression&emsp;</h1>
+                <h1>&emsp;Linear / Polynomial Regression&emsp;</h1>
               <label htmlFor='Size'>&emsp;Number of data :&emsp;</label>
               <input 
                 name='Size'
@@ -140,17 +191,24 @@ const Regression = () => {
                 onChange={event => setSize(event.target.value)}
                 size='11'
               />
-              <label htmlFor='Xi'>&emsp;Xi :&emsp;</label>
+              <label htmlFor='Degree'>&emsp;Degree :&emsp;</label>
               <input 
-                name='Xi'
-                placeholder='Ex: 3.5 for f(3.5)' 
-                value = {getXi}
-                onChange={event => setXi(event.target.value)}
-                size='11'
+                name='Degree'
+                placeholder='Ex: 2 = a0+a1x+a2x^2' 
+                value = {getDegree}
+                onChange={event => setDegree(event.target.value)}
+                size='18'
               />
             </div>
-            
-
+            <p></p>
+            <label htmlFor='Xi'>&emsp;Xi :&emsp;</label>
+              <input 
+                name='Xi'
+                placeholder='Ex: X that we want to know' 
+                value = {getXi}
+                onChange={event => setXi(event.target.value)}
+                size='3'
+              />
             <p></p>
             <p>
             <div>
@@ -161,7 +219,7 @@ const Regression = () => {
             <p id = 'cal_button'></p>
             <p id = 'outputarray'></p>
             <h3><p id = 'final'></p></h3>
-            <p id = 'printLterm'></p>
+            <p id = 'proof'></p>
           </form>
           </div>
           </body>

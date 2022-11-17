@@ -58,7 +58,14 @@ const Layout = () => {
             </NavDropdown>
           </Nav>
           <Nav>
-          <Button variant="dark" href="/Regression" >Regression</Button>
+            <NavDropdown
+              id="nav-dropdown-dark-example"
+              title="Regression"
+              menuVariant="dark"
+              >
+              <NavDropdown.Item href="/Regression">Linear / Polynomial Regression</NavDropdown.Item>
+
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
         <Nav>
