@@ -77,6 +77,10 @@ const Regression = () => {
           curve: 'smooth'
         }
     }
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+
+    
     
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
@@ -89,8 +93,8 @@ const Regression = () => {
         console.log("Degree = "+Degree)
         console.log("Xi = "+Xi)
         createMatrix(Size)
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
+        
+        
         
     }
 
@@ -159,8 +163,12 @@ const Regression = () => {
       RegressionCalc();
       printout();
 
+
+      
+
+
       array = [];//clear array for next inc array input
-      array2 = []
+      
       tempRegression = [];
       MatrixA = [];
       MatrixB = [];
@@ -170,8 +178,7 @@ const Regression = () => {
       Xarray =[];
       Yarray = [];
 
-
-
+      array2 = []
     }
 
     function RegressionCalc()
@@ -267,7 +274,7 @@ const Regression = () => {
         console.log(Yarray)
         console.log(Y_Regressionarray)
         //เอาค่าใส่ array ไว้ plot graph
-        for(var d = 0;d<=Y_Regressionarray.length;d++)
+        for(var d = 0;d<Y_Regressionarray.length;d++)
           {
             let tempa = []
             tempa.push(Xarray[d])
