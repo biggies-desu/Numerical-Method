@@ -16,6 +16,8 @@ const Falseposition = () => {
     var xmgraph = xmarray;
     var igraph = iarray;
 
+    var value,textt //api stuff
+
     var options = { //graph related
         chart: {
           type: 'line',
@@ -54,6 +56,42 @@ const Falseposition = () => {
       
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render(); //render chart (every time that state change)
+
+    //fetch data from api 
+    var getexam = e => {
+      e.preventDefault();
+      //get index 
+      var d = document.getElementById("example")
+      value = d.value;
+      textt = d.options[d.selectedIndex].text;
+      console.log(value)
+      console.log(textt)
+      //set value from api and set to input form
+      if(value!=0) //if option is select get data from api
+
+
+      //json-server --watch db.json --port xxxxx
+      //อย่าลืมเรียก terminal แล้วรัน Server ก่อน
+      //ดึงข้อมูลจาก  json server
+      {
+          fetch('http://localhost:3001/FalsePositionExample') //
+          .then(res => {
+            console.log(res)
+          return res.json(); //check respond
+          })
+          .then(data => {
+          console.log(data) //show db.json
+          console.log(data[value]) // console.log for shit
+          console.log(data[value].getXR) // console.log for shit
+          setXL(data[value].getXL)
+          setXR(data[value].getXR)
+          setErrorApox(data[value].getErrorApox)
+          setFunct(data[value].getFunct)
+        })
+        .catch(err => console.log(err))
+      }
+      getValue();
+    }
 
 
     var getValue = e => {//hale input event and pass value to function
@@ -174,7 +212,18 @@ const Falseposition = () => {
             &emsp;<button>Calculate</button>
             </div>
             </p>
-            <h2><p id = 'finalans'></p></h2>
+            <div>
+            <label htmlFor='example'>&emsp;example :&emsp;</label>
+          <select name="example" id="example" onChange={getexam}>
+                <option disabled selected value="0">Select โจทย์</option>
+                <option value="1">ตัวอย่าง 1</option>
+                <option value="2">ตัวอย่าง 2</option>
+                <option value="3">ตัวอย่าง 3</option>
+                <option value="4">ตัวอย่าง 4</option>
+                <option value="5">ตัวอย่าง 5</option>
+                </select>
+          </div>
+          <h2><p id = 'finalans'></p></h2>
             <p id = 'chart'></p>
             <p id = 'finaltext'></p>
           </form>

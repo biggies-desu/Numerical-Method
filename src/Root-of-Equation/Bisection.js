@@ -1,27 +1,26 @@
 import React,{ Component, useEffect } from 'react'
 import { useState } from 'react'
 import ApexCharts from 'apexcharts'
-import Axois from 'axios'
-const data = require('./funnyapi.json')
 const math = require('mathjs');
 var xmarray = [];
 var iarray = [];
 //refactor code from class component to functional component
 
+
+
 const Bisection = () => {
     var Funct,ErrorApox,XL,XR;
 
-    const [getFunct, setFunct] = useState('')
-    const [getErrorApox, setErrorApox] = useState('')
-    const [getXL, setXL] = useState('')
-    const [getXR, setXR] = useState('')
+    var [getFunct, setFunct] = useState('')
+    var [getErrorApox, setErrorApox] = useState('')
+    var [getXL, setXL] = useState('')
+    var [getXR, setXR] = useState('')
     var xmgraph = xmarray;
     var igraph = iarray;
 
-    useEffect(() => {
-      Axois.get('https://jsonplaceholder.typicode.com/todos/1')
-      .then(res => console.log(res.data)).catch(err => console.log(err))
-    }, [])
+    var value,textt //api stuff
+
+    
 
     var options = { //graph related
         chart: {
@@ -62,15 +61,50 @@ const Bisection = () => {
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render(); //render chart (every time that state change)
 
+      //fetch data from api
 
+      
+      var getexam = e => {
+        e.preventDefault();
+        //get index 
+        var d = document.getElementById("example")
+        value = d.value;
+        textt = d.options[d.selectedIndex].text;
+        console.log(value)
+        console.log(textt)
+        //set value from api and set to input form
+        if(value!=0) //if option is select get data from api
+
+
+        //json-server --watch db.json --port xxxxx
+        //อย่าลืมเรียก terminal แล้วรัน Server ก่อน
+        //ดึงข้อมูลจาก  json server
+        {
+            fetch('http://localhost:3001/BisectionExample') //
+            .then(res => {
+              console.log(res)
+            return res.json(); //check respond
+            })
+            .then(data => {
+            console.log(data) //show db.json
+            console.log(data[value]) // console.log for shit
+            console.log(data[value].getXR) // console.log for shit
+            setXL(data[value].getXL)
+            setXR(data[value].getXR)
+            setErrorApox(data[value].getErrorApox)
+            setFunct(data[value].getFunct)
+          })
+          .catch(err => console.log(err))
+        }
+        getValue();
+      }  
+      
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         Funct = getFunct
         ErrorApox = getErrorApox;
         XL = getXL;
         XR = getXR;
-        
-        console.log(getXL);
         console.log(XL);
         console.log(XR);
         console.log(ErrorApox);
@@ -140,7 +174,8 @@ const Bisection = () => {
             <div>
                 <h1>&emsp;Bisection Method&emsp;</h1>
               <label htmlFor='XL'>&emsp;XL :&emsp;</label>
-              <input 
+              <input
+                id ='XL' 
                 name='XL'
                 placeholder='Starting XL' 
                 value = {getXL}
@@ -149,6 +184,7 @@ const Bisection = () => {
               />
               <label htmlFor='XR'>&emsp;XR :&emsp;</label>
               <input
+                id ='XR' 
                 name='XR' 
                 placeholder='Starting XR'
                 value={getXR}
@@ -157,6 +193,7 @@ const Bisection = () => {
               />
               <label htmlFor='ErrorApox'>&emsp;Error approximation :&emsp;</label>
               <input
+                id ='ErrorApox' 
                 name='ErrorApox' 
                 placeholder='ErrorApox'
                 value={getErrorApox}
@@ -168,6 +205,7 @@ const Bisection = () => {
               <div>
               <label htmlFor='Funct'>&emsp;Function :&emsp;</label>
               <input
+                id = 'Funct'
                 name='Funct' 
                 placeholder='Input function here!'
                 value={getFunct}
@@ -181,10 +219,21 @@ const Bisection = () => {
             &emsp;<button>Calculate</button>
             </div>
             </p>
-            <h2><p id = 'finalans'></p></h2>
+          </form>
+          <div>
+            <label htmlFor='example'>&emsp;example :&emsp;</label>
+          <select name="example" id="example" onChange={getexam}>
+                <option disabled selected value="0">Select โจทย์</option>
+                <option value="1">ตัวอย่าง 1</option>
+                <option value="2">ตัวอย่าง 2</option>
+                <option value="3">ตัวอย่าง 3</option>
+                <option value="4">ตัวอย่าง 4</option>
+                <option value="5">ตัวอย่าง 5</option>
+                </select>
+          </div>
+          <h2><p id = 'finalans'></p></h2>
             <p id = 'chart'></p>
             <p id = 'finaltext'></p>
-          </form>
           </div>
           </body>
     )
