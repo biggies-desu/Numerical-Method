@@ -1,6 +1,8 @@
-import React,{ Component } from 'react'
+import React,{ Component, useEffect } from 'react'
 import { useState } from 'react'
 import ApexCharts from 'apexcharts'
+import Axois from 'axios'
+const data = require('./funnyapi.json')
 const math = require('mathjs');
 var xmarray = [];
 var iarray = [];
@@ -15,6 +17,11 @@ const Bisection = () => {
     const [getXR, setXR] = useState('')
     var xmgraph = xmarray;
     var igraph = iarray;
+
+    useEffect(() => {
+      Axois.get('https://jsonplaceholder.typicode.com/todos/1')
+      .then(res => console.log(res.data)).catch(err => console.log(err))
+    }, [])
 
     var options = { //graph related
         chart: {
