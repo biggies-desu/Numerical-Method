@@ -8,11 +8,12 @@ const math = require('mathjs');
 const Regression = () => {
     var Size,Degree,Xi;
     var array=[];
+    var array2=[];
     var temparray = [];
     var Xarray=[];
-    var Xarray2=[];
     var Yarray=[]
     var Y_Regressionarray = []
+
 
     var tempRegression = []; //regression calculate part
     var MatrixA = [];
@@ -30,17 +31,24 @@ const Regression = () => {
         type: 'line',
         width: '750'
       },
-      xaxis: {
-      },
-      series: [{
+      /*series: [{
         name: "Y (Input)",
-        data: Yarray
+        data: XYarray
       },
       {
         name: "Y with regression",
         data: Y_Regressionarray
       }
-      ]
+      ]*/
+      series: [{
+        name: 'Y position',
+        type: 'line',
+        data: array
+      }, {
+        name: 'Y position (in Regression function)',
+        type: 'line',
+        data: array2
+      }]
       ,
       grid: {
           row: {
@@ -70,8 +78,6 @@ const Regression = () => {
         }
     }
     
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render(); //render chart (every time that state change)
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         document.getElementById('matrix').innerHTML = ""//clear matrix each clicks
@@ -83,6 +89,8 @@ const Regression = () => {
         console.log("Degree = "+Degree)
         console.log("Xi = "+Xi)
         createMatrix(Size)
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
         
     }
 
@@ -99,6 +107,8 @@ const Regression = () => {
       document.getElementById('cal_button').innerHTML = ""//create button
       document.getElementById('cal_button').innerHTML += '<button onclick="calculate()">Calculate the matrix</button>'
       document.getElementById('cal_button').onclick = function(){calculate()};//button call calculate function
+
+      
     }
 
     function calculate()
@@ -140,13 +150,8 @@ const Regression = () => {
       {
         Yarray.push(array[b][1]);
       }
-      for(var c=0;c<Size;c++)
-      {
-        Xarray2.push(Xarray[c].toString())
-      }
       console.log(Xarray)
       console.log(Yarray)
-      console.log(Xarray2);
 
 
       //push x for plot graph since somehow it didnt work
@@ -155,6 +160,7 @@ const Regression = () => {
       printout();
 
       array = [];//clear array for next inc array input
+      array2 = []
       tempRegression = [];
       MatrixA = [];
       MatrixB = [];
@@ -163,6 +169,9 @@ const Regression = () => {
       
       Xarray =[];
       Yarray = [];
+
+
+
     }
 
     function RegressionCalc()
@@ -256,6 +265,18 @@ const Regression = () => {
         }
         console.log(Xarray)
         console.log(Yarray)
+        console.log(Y_Regressionarray)
+        //เอาค่าใส่ array ไว้ plot graph
+        for(var d = 0;d<=Y_Regressionarray.length;d++)
+          {
+            let tempa = []
+            tempa.push(Xarray[d])
+            tempa.push(Y_Regressionarray[d])
+            array2.push(tempa)
+          }
+          console.log(array2)
+
+          
     }
 
     return(<body>
