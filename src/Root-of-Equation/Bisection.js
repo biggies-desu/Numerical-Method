@@ -61,9 +61,7 @@ const Bisection = () => {
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render(); //render chart (every time that state change)
 
-      //fetch data from api
-
-      
+      //fetch data from api 
       var getexam = e => {
         e.preventDefault();
         //get index 
@@ -206,7 +204,7 @@ const Bisection = () => {
               <label htmlFor='Funct'>&emsp;Function :&emsp;</label>
               <input
                 id = 'Funct'
-                name='Funct' 
+                name='Funct'
                 placeholder='Input function here!'
                 value={getFunct}
                 onChange={event => setFunct(event.target.value)}

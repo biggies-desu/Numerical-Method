@@ -66,13 +66,15 @@ const Falseposition = () => {
       textt = d.options[d.selectedIndex].text;
       console.log(value)
       console.log(textt)
-      //set value from api and set to input form
-      if(value!=0) //if option is select get data from api
+      /*
+        
+        อย่าลืมเรียก terminal แล้วรัน Server ==> (json-server --watch db.json --port xxxxx)
+        ก่อนค่อย run client ==> (npm start)
+        port ในที่นี้เราจะ run ใน port 3001
 
-
-      //json-server --watch db.json --port xxxxx
-      //อย่าลืมเรียก terminal แล้วรัน Server ก่อน
+      */
       //ดึงข้อมูลจาก  json server
+      if(value!=0) //if user select option get data from api which is (db.json) running on server
       {
           fetch('http://localhost:3001/FalsePositionExample') //
           .then(res => {

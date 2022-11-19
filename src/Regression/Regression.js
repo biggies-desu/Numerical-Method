@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import ApexCharts from 'apexcharts'
 import { propTypes } from 'react-bootstrap/esm/Image';
+
 const math = require('mathjs');
 //refactor code from class component to functional component
 //THIS ONE ONLY FOR LINEAR AND POLYNOMIAL REGRESSION
@@ -14,6 +15,11 @@ const Regression = () => {
     var Yarray=[]
     var Y_Regressionarray = []
 
+    var value,textt //api stuff
+    var textfd
+    var apidataarray=[]
+    var apidataarray2=[]
+    var ar
 
     var tempRegression = []; //regression calculate part
     var MatrixA = [];
@@ -25,6 +31,7 @@ const Regression = () => {
     const [getSize, setSize] = useState('')
     const [getDegree,setDegree] = useState('')
     const [getXi,setXi] = useState('')
+
 
     var options = { //graph related
       chart: {
@@ -79,9 +86,43 @@ const Regression = () => {
     }
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
+    //ทำให้มัน update ค่าไม่ได้อะวิ
 
-    
-    
+    var getexam = e => {
+      e.preventDefault();
+      //get index 
+      var d = document.getElementById("example")
+      value = d.value;
+      textt = d.options[d.selectedIndex].text;
+      console.log(value)
+      console.log(textt)
+
+      //set value from api and set to input form
+      if(value!=0) //if option is select get data from api
+
+
+      //json-server --watch db.json --port xxxxx
+      //อย่าลืมเรียก terminal แล้วรัน Server ก่อน
+      //ดึงข้อมูลจาก  json server
+      {
+          fetch('http://localhost:3001/Regression_Size') //
+          .then(res => {
+            console.log(res)
+          return res.json(); //check respond
+          })
+          .then(data => {
+          console.log(data) //show db.json
+          console.log(data[value]) // console.log for shit
+          console.log(data[value].getXR) // console.log for shit
+          setSize(data[value].getSize)
+          setDegree(data[value].getDegree)
+          setXi(data[value].getXi)})
+
+        .catch(err => console.log(err))
+      }
+      getValue();
+    }
+
     var getValue = e => {//hale input event and pass value to function
         e.preventDefault();
         document.getElementById('matrix').innerHTML = ""//clear matrix each clicks
@@ -92,32 +133,98 @@ const Regression = () => {
         console.log("Size = "+Size)
         console.log("Degree = "+Degree)
         console.log("Xi = "+Xi)
+
+
+        var d = document.getElementById("example")
+        value = d.value;
+          fetch('http://localhost:3001/Regression_Size') //
+          .then(res => {
+            console.log(res)
+          return res.json(); //check respond
+          })
+          .then(data => {
+          console.log(data) //show db.json
+          console.log(data[value]) // console.log for shit
+          })
+
+        .catch(err => console.log(err))
         createMatrix(Size)
+
+        putdata()
+
         
+        console.log("====")
+        console.log(apidataarray)
         
+    }
+
+    function putdata()
+    {
+      if(value!=0)
+      {
+        fetch('http://localhost:3001/RegressionExample') //
+        .then(res => {
+          console.log(res)
+        return res.json(); //check respond
+        })
+        .then(data2 => {
+        console.log(data2) //show db.json
+        console.log(data2[value]) // console.log for shit
+        ar = Object.entries(data2[value])
+        console.log(ar)
+        for (var i in ar)
+        {
+          console.log(ar[i][1]);
+          apidataarray.push(ar[i][1])
+        }
+          console.log(apidataarray)
+          apidataarray2 = apidataarray
+          let start = 1
+          for (let row = 1; row<=Size;row++)
+          {
+            textfd=document.getElementById('matrix_index_row'+row +'col'+1)
+            textfd.setAttribute("value", apidataarray2[start])
+            start++
+            textfd=document.getElementById('matrix_index_row'+row +'col'+2)
+            textfd.setAttribute("value", apidataarray2[start])
+            start++
+          }
+        }
         
+        )
+        .catch(err => console.log(err))
+      }
     }
 
     function createMatrix(Size)
     {
+      console.log(apidataarray)
       for(var row=1;row<=Size;row++)
       {
+        let ti=1
         for(var col=1;col<=2;col++)
         {
           document.getElementById('matrix').innerHTML += '<input type="text" id="matrix_index_row'+row +'col'+(col)+'" name="" placeholder="-" size=3>';
+          /*
+          if(value!=0)
+          {
+            console.log("Selected")
+            textfd=document.getElementById('matrix_index_row'+row +'col'+(col))
+            textfd.setAttribute("value", apidataarray[ti]);
+            console.log(textfd)
+            ti++
+          }*/
         }
         document.getElementById('matrix').innerHTML += '<br/>'
       }
       document.getElementById('cal_button').innerHTML = ""//create button
       document.getElementById('cal_button').innerHTML += '<button onclick="calculate()">Calculate the matrix</button>'
       document.getElementById('cal_button').onclick = function(){calculate()};//button call calculate function
-
-      
     }
 
-    function calculate()
+    function showoutputarray()
     {
-      //clear output array
+        //clear output array
       document.getElementById('outputarray').innerHTML = ""
 
       //get array input
@@ -144,6 +251,11 @@ const Regression = () => {
             document.getElementById('outputarray').innerHTML += " = "+array[i][1]+"y] <br/>"
         }
       }
+    }
+
+    function calculate()
+    {
+      showoutputarray()
 
       //seperate X and Y
       for(var a=0;a<Size;a++)
@@ -162,9 +274,6 @@ const Regression = () => {
 
       RegressionCalc();
       printout();
-
-
-      
 
 
       array = [];//clear array for next inc array input
@@ -322,6 +431,17 @@ const Regression = () => {
             <div>
             &emsp;<button>Submit</button>
             </div>
+            <div>
+            <label htmlFor='example'>&emsp;example :&emsp;</label>
+            <select name="example" id="example" onChange={getexam}>
+                <option disabled selected value="0">Select โจทย์</option>
+                <option value="1">ตัวอย่าง 1</option>
+                <option value="2">ตัวอย่าง 2</option>
+                <option value="3">ตัวอย่าง 3</option>
+                <option value="4">ตัวอย่าง 4</option>
+                <option value="5">ตัวอย่าง 5</option>
+                </select>
+          </div>
             </p>
             <p id = 'matrix'></p>
             <p id = 'cal_button'></p>
