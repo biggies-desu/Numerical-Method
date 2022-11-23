@@ -150,12 +150,11 @@ const Regression = () => {
         .catch(err => console.log(err))
         createMatrix(Size)
 
-        putdata()
+        putdata() //ไอตรงนี้แหละที่ปวดกระบาล โยนค่าเอามาใส่ใน Matrix
 
-        
         console.log("====")
         console.log(apidataarray)
-        
+      
     }
 
     function putdata()

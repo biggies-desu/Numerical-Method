@@ -20,8 +20,6 @@ const Bisection = () => {
 
     var value,textt //api stuff
 
-    
-
     var options = { //graph related
         chart: {
           type: 'line',
@@ -71,30 +69,30 @@ const Bisection = () => {
         console.log(value)
         console.log(textt)
         //set value from api and set to input form
-        if(value!=0) //if option is select get data from api
-
 
         //json-server --watch db.json --port xxxxx
         //อย่าลืมเรียก terminal แล้วรัน Server ก่อน
         //ดึงข้อมูลจาก  json server
+
+        if(value!=0) //if option is select get data from api
         {
             fetch('http://localhost:3001/BisectionExample') //
             .then(res => {
               console.log(res)
-            return res.json(); //check respond
+              return res.json(); //check respond
             })
             .then(data => {
-            console.log(data) //show db.json
-            console.log(data[value]) // console.log for shit
-            console.log(data[value].getXR) // console.log for shit
-            setXL(data[value].getXL)
-            setXR(data[value].getXR)
-            setErrorApox(data[value].getErrorApox)
-            setFunct(data[value].getFunct)
-          })
+              console.log(data) //show db.json
+              console.log(data[value]) // console.log for shit
+              console.log(data[value].getXR) // console.log for shit
+              setXL(data[value].getXL) //call function SetXL() with parameter of "value that store in json file"
+              setXR(data[value].getXR)
+              setErrorApox(data[value].getErrorApox)
+              setFunct(data[value].getFunct)
+            })
           .catch(err => console.log(err))
         }
-        getValue();
+        getValue(); //อันนี้คือไปรัน function คำนวณหลักละ
       }  
       
     var getValue = e => {//hale input event and pass value to function

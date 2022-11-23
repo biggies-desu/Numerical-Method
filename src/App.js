@@ -2,11 +2,7 @@ import './App.css';
 import './css/styles.css';
 import 'bootstrap';
 import React from "react";
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import ReactDOM from "react-dom";
+
 import { BrowserRouter, Route, Routes, Switch } from "react-router-dom";
 //import Bisection from './js/Bisection'
 //import Falseposition from './js/False-position'
