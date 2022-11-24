@@ -1,8 +1,5 @@
-This is my project doing react application with numerical method relate.
+Project about creating React web application with numerical method related.
 
-I would trying my best to do this.
-
-(reactjs pain awa)
-
+For study how to coding with JavaScript/HTML, using external library and fetching data from API
 
 Made by : Decha Boonmapasap 6404062630350 CS KMUTNB
