@@ -33,7 +33,7 @@ const MatrixInversion = () => {
       {
         for(var col=0;col<=Size;col++)
         {
-          document.getElementById('matrix').innerHTML += '<input type="text" id="matrix_index_row'+row +'col'+(col+1)+'" name="" placeholder="---" size=3>';
+          document.getElementById('matrix').innerHTML += '<input type="text" id="matrix_index_row'+row +'col'+(col+1)+'"name="" placeholder="---" size=3>';
         }
         document.getElementById('matrix').innerHTML += '<br/>'
       }
